@@ -33,12 +33,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 app.use((err, req, res, next) => {
-  // eslint-disable-next-line no-console
   console.error(err);
-  const statusCode = err.statusCode || 500;
-  res
-    .status(statusCode)
-    .json({ message: err.message || "Internal Server Error" });
+  res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
 app.listen(PORT, () => {

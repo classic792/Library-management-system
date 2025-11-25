@@ -23,8 +23,7 @@ export const signup = async (req, res) => {
       ...result,
     });
   } catch (err) {
-    const statusCode = err.statusCode || 500;
-    return res.status(statusCode).json({
+    return res.status(500).json({
       message: err.message || "Unable to register user",
     });
   }
@@ -49,8 +48,7 @@ export const login = async (req, res) => {
       ...result,
     });
   } catch (err) {
-    const statusCode = err.statusCode || 500;
-    return res.status(statusCode).json({
+    return res.status(500).json({
       message: err.message || "Unable to login",
     });
   }

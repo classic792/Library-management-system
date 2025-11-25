@@ -1,17 +1,17 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import { comparePassword } from '../utils/passwordHash.js';
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import { comparePassword } from "../utils/passwordHash.js";
 
-const sanitizeUser = (userDoc) => {
-  const user = userDoc.toObject();
-  delete user.password;
-  delete user.confirmPassword;
-  return user;
-};
+// const sanitizeUser = (userDoc) => {
+//   const user = userDoc.toObject();
+//   delete user.password;
+//   delete user.confirmPassword;
+//   return user;
+// };
 
 const generateToken = (userId, role) => {
-  const secret = process.env.JWT_SECRET || 'dev-secret';
-  const expiresIn = process.env.JWT_EXPIRES_IN || '1d';
+  const secret = process.env.JWT_SECRET || "dev-secret";
+  const expiresIn = process.env.JWT_EXPIRES_IN || "1d";
   return jwt.sign({ sub: userId, role }, secret, { expiresIn });
 };
 
@@ -29,10 +29,14 @@ export const registerUser = async (payload) => {
   });
 
   if (existingUser) {
-    throwHttpError('User with provided email or alias already exists', 409);
+    throwHttpError("User with provided email or alias already exists", 409);
   }
 
-  const newUser = await User.create(payload);
+  const newUser = await User.create({
+    ...payload,
+    email,
+    alias,
+  });
   const token = generateToken(newUser._id, newUser.role);
 
   return {
@@ -42,18 +46,20 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async ({ identifier, password }) => {
+  const normalizedIdentifier = identifier?.trim().toLowerCase();
+
   const user = await User.findOne({
-    $or: [{ email: identifier }, { alias: identifier }],
-  }).select('+password');
+    $or: [{ email: normalizedIdentifier }, { alias: normalizedIdentifier }],
+  }).select("+password");
 
   if (!user) {
-    throwHttpError('Invalid credentials', 401);
+    throwHttpError("Invalid credentials", 401);
   }
 
   const isMatch = await comparePassword(password, user.password);
 
   if (!isMatch) {
-    throwHttpError('Invalid credentials', 401);
+    throwHttpError("Invalid credentials", 401);
   }
 
   const token = generateToken(user._id, user.role);
@@ -63,4 +69,3 @@ export const loginUser = async ({ identifier, password }) => {
     token,
   };
 };
-

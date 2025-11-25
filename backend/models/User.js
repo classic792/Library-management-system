@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      lowercase: true,
       minlength: 2,
     },
     password: {
@@ -55,6 +56,16 @@ userSchema.pre("save", async function encryptPassword(next) {
   if (!this.isModified("password")) return next();
   this.password = await hashPassword(this.password);
   this.confirmPassword = undefined;
+  next();
+});
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate();
+  if (update.password) {
+    update.password = await hashPassword(update.password);
+    update.confirmPassword = undefined;
+    this.setUpdate(update);
+  }
   next();
 });
 
