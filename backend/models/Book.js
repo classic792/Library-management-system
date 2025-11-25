@@ -1,0 +1,94 @@
+import mongoose from "mongoose";
+
+const bookSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    author: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isbn: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    year: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    totalCopies: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    availableCopies: {
+      type: Number,
+      min: 0,
+    },
+    imageUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+bookSchema.pre("save", function normalizeCopies(next) {
+  if (this.availableCopies == null) {
+    this.availableCopies = this.totalCopies;
+  }
+
+  if (this.availableCopies > this.totalCopies) {
+    this.availableCopies = this.totalCopies;
+  }
+
+  next();
+});
+
+bookSchema.methods.incrementCopies = function incrementCopies(count = 1) {
+  if (count <= 0) return this;
+  this.totalCopies += count;
+  this.availableCopies += count;
+  return this;
+};
+
+bookSchema.methods.decrementCopies = function decrementCopies(count = 1) {
+  if (count <= 0) return this;
+  this.totalCopies = Math.max(0, this.totalCopies - count);
+  this.availableCopies = Math.min(this.availableCopies, this.totalCopies);
+  return this;
+};
+
+bookSchema.methods.borrowCopy = function borrowCopy() {
+  if (this.availableCopies <= 0) {
+    throw new Error("No copies available");
+  }
+  this.availableCopies -= 1;
+  return this;
+};
+
+bookSchema.methods.returnCopy = function returnCopy() {
+  if (this.availableCopies < this.totalCopies) {
+    this.availableCopies += 1;
+  }
+  return this;
+};
+
+const Book = mongoose.model("Book", bookSchema);
+
+export default Book;
