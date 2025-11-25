@@ -6,15 +6,20 @@ const throwHttpError = (message, statusCode = 400) => {
   throw error;
 };
 
+const trimStringFields = (payload) => {
+  const result = {};
+  Object.entries(payload).forEach(([key, value]) => {
+    if (typeof value === "string") {
+      result[key] = value.trim();
+    } else {
+      result[key] = value;
+    }
+  });
+  return result;
+};
+
 export const createBook = async (payload) => {
-  const normalizedPayload = {
-    ...payload,
-    title: payload.title?.trim(),
-    author: payload.author?.trim(),
-    category: payload.category?.trim(),
-    isbn: payload.isbn?.trim(),
-    imageUrl: payload.imageUrl?.trim(),
-  };
+  const normalizedPayload = trimStringFields(payload);
 
   const existing = await Book.findOne({ isbn: normalizedPayload.isbn });
   if (existing) {
@@ -42,26 +47,8 @@ export const updateBookById = async (bookId, updates) => {
     throwHttpError("Book not found", 404);
   }
 
-  const fields = [
-    "title",
-    "author",
-    "category",
-    "isbn",
-    "year",
-    "totalCopies",
-    "availableCopies",
-    "imageUrl",
-  ];
-
-  fields.forEach((field) => {
-    if (updates[field] !== undefined) {
-      if (typeof updates[field] === "string") {
-        book[field] = updates[field].trim();
-      } else {
-        book[field] = updates[field];
-      }
-    }
-  });
+  const normalizedUpdates = trimStringFields(updates);
+  Object.assign(book, normalizedUpdates);
 
   await book.save();
   return book;
@@ -72,5 +59,35 @@ export const deleteBookById = async (bookId) => {
   if (!book) {
     throwHttpError("Book not found", 404);
   }
+  return book;
+};
+
+export const borrowBook = async (bookId) => {
+  const book = await Book.findById(bookId);
+  if (!book) {
+    throwHttpError("Book not found", 404);
+  }
+
+  if (book.availableCopies <= 0) {
+    throwHttpError("No copies available to borrow", 400);
+  }
+
+  book.borrowCopy();
+  await book.save();
+  return book;
+};
+
+export const returnBook = async (bookId) => {
+  const book = await Book.findById(bookId);
+  if (!book) {
+    throwHttpError("Book not found", 404);
+  }
+
+  if (book.availableCopies >= book.totalCopies) {
+    throwHttpError("All copies are already returned", 400);
+  }
+
+  book.returnCopy();
+  await book.save();
   return book;
 };
