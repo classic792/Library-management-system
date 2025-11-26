@@ -70,5 +70,4 @@ router.post(
   validate(returnCreateSchema),
   returnBookController
 );
-
 export default router;

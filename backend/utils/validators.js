@@ -1,7 +1,8 @@
 import Joi from "joi";
 
 export const signupSchema = Joi.object({
-  name: Joi.string().trim().min(2).required(),
+  firstName: Joi.string().trim().min(2).required(),
+  lastName: Joi.string().trim().min(2).required(),
   email: Joi.string().trim().lowercase().email().required(),
   alias: Joi.string().trim().min(2).required(),
   password: Joi.string().min(8).required(),
@@ -58,4 +59,19 @@ export const borrowIdParamSchema = Joi.object({
 
 export const returnIdParamSchema = Joi.object({
   returnId: Joi.string().hex().length(24).required(),
+});
+
+export const searchQuerySchema = Joi.object({
+  title: Joi.string().trim().optional(),
+  author: Joi.string().trim().optional(),
+  isbn: Joi.string().trim().optional(),
+  category: Joi.string().trim().optional(),
+  availableOnly: Joi.boolean().optional(),
+  year: Joi.number().integer().min(0).optional(),
+  minYear: Joi.number().integer().min(0).optional(),
+  maxYear: Joi.number().integer().min(0).optional(),
+});
+
+export const searchSuggestionQuerySchema = Joi.object({
+  q: Joi.string().trim().min(1).optional(),
 });

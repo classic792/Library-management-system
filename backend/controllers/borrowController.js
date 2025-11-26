@@ -30,7 +30,10 @@ export const getUserBorrowsController = async (req, res) => {
 
 export const getBookBorrowsController = async (req, res) => {
   try {
-    const borrows = await getBookBorrows(req.validatedParams.bookId, req.validatedQuery?.status);
+    const borrows = await getBookBorrows(
+      req.validatedParams.bookId,
+      req.validatedQuery?.status
+    );
     return res.status(200).json({
       message: "Book borrows fetched successfully",
       data: borrows,
@@ -57,7 +60,7 @@ export const getBorrowController = async (req, res) => {
   try {
     const borrow = await getBorrowById(req.validatedParams.borrowId);
     return res.status(200).json({
-      message: "Borrow fetched successfully",
+      message: "Borrowed Books: fetched successfully",
       data: borrow,
     });
   } catch (error) {
@@ -68,7 +71,10 @@ export const getBorrowController = async (req, res) => {
 export const updateBorrowStatusController = async (req, res) => {
   try {
     const { status } = req.validatedData;
-    const borrow = await updateBorrowStatus(req.validatedParams.borrowId, status);
+    const borrow = await updateBorrowStatus(
+      req.validatedParams.borrowId,
+      status
+    );
     return res.status(200).json({
       message: "Borrow status updated successfully",
       data: borrow,
@@ -92,4 +98,3 @@ export const checkOverdueBorrowsController = async (req, res) => {
     return respondWithError(res, error, "Unable to check overdue borrows");
   }
 };
-
