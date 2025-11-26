@@ -4,13 +4,9 @@ import {
   getBookById,
   updateBookById,
   deleteBookById,
-  borrowBook,
-  returnBook,
 } from "../services/bookService.js";
-import {
-  bookCreateSchema,
-  bookUpdateSchema,
-} from "../utils/validators.js";
+import { createBorrow } from "../services/borrowService.js";
+import { createReturn } from "../services/returnService.js";
 
 const respondWithError = (res, error, fallbackMessage) => {
   const statusCode = error.statusCode || 500;
@@ -19,22 +15,9 @@ const respondWithError = (res, error, fallbackMessage) => {
   });
 };
 
-const validatePayload = (schema, payload) => {
-  const { error, value } = schema.validate(payload, { abortEarly: false });
-  if (error) {
-    const validationError = new Error(
-      error.details.map((detail) => detail.message).join(", ")
-    );
-    validationError.statusCode = 400;
-    throw validationError;
-  }
-  return value;
-};
-
 export const createBookController = async (req, res) => {
   try {
-    const validatedData = validatePayload(bookCreateSchema, req.body);
-    const book = await createBook(validatedData);
+    const book = await createBook(req.validatedData);
     return res.status(201).json({
       message: "Book created successfully",
       data: book,
@@ -58,7 +41,7 @@ export const getBooksController = async (req, res) => {
 
 export const getBookController = async (req, res) => {
   try {
-    const book = await getBookById(req.params.bookId);
+    const book = await getBookById(req.validatedParams.bookId);
     return res.status(200).json({
       message: "Book fetched successfully",
       data: book,
@@ -70,8 +53,7 @@ export const getBookController = async (req, res) => {
 
 export const updateBookController = async (req, res) => {
   try {
-    const validatedData = validatePayload(bookUpdateSchema, req.body);
-    const book = await updateBookById(req.params.bookId, validatedData);
+    const book = await updateBookById(req.validatedParams.bookId, req.validatedData);
     return res.status(200).json({
       message: "Book updated successfully",
       data: book,
@@ -83,7 +65,7 @@ export const updateBookController = async (req, res) => {
 
 export const deleteBookController = async (req, res) => {
   try {
-    await deleteBookById(req.params.bookId);
+    await deleteBookById(req.validatedParams.bookId);
     return res.status(200).json({
       message: "Book deleted successfully",
     });
@@ -94,10 +76,12 @@ export const deleteBookController = async (req, res) => {
 
 export const borrowBookController = async (req, res) => {
   try {
-    const book = await borrowBook(req.params.bookId);
-    return res.status(200).json({
+    const userId = req.user.id;
+    const { dueDateDays } = req.validatedData || {};
+    const borrow = await createBorrow(userId, req.validatedParams.bookId, dueDateDays);
+    return res.status(201).json({
       message: "Book borrowed successfully",
-      data: book,
+      data: borrow,
     });
   } catch (error) {
     return respondWithError(res, error, "Unable to borrow the book");
@@ -106,10 +90,12 @@ export const borrowBookController = async (req, res) => {
 
 export const returnBookController = async (req, res) => {
   try {
-    const book = await returnBook(req.params.bookId);
-    return res.status(200).json({
+    const userId = req.user.id;
+    const { condition, fine } = req.validatedData || {};
+    const returnRecord = await createReturn(userId, req.validatedParams.bookId, condition, fine);
+    return res.status(201).json({
       message: "Book returned successfully",
-      data: book,
+      data: returnRecord,
     });
   } catch (error) {
     return respondWithError(res, error, "Unable to return the book");

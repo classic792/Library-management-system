@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
+import borrowRoutes from "./routes/borrowRoutes.js";
+import returnRoutes from "./routes/returnRoutes.js";
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/borrows", borrowRoutes);
+app.use("/api/returns", returnRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
