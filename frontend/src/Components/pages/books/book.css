@@ -1,0 +1,11 @@
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.books-table th,
+.books-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
