@@ -2,12 +2,12 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { comparePassword } from "../utils/passwordHash.js";
 
-// const sanitizeUser = (userDoc) => {
-//   const user = userDoc.toObject();
-//   delete user.password;
-//   delete user.confirmPassword;
-//   return user;
-// };
+const sanitizeUser = (userDoc) => {
+  const user = userDoc.toObject();
+  delete user.password;
+  delete user.confirmPassword;
+  return user;
+};
 
 const generateToken = (userId, role) => {
   const secret = process.env.JWT_SECRET || "dev-secret";
@@ -23,11 +23,9 @@ const throwHttpError = (message, statusCode) => {
 
 export const registerUser = async (payload) => {
   const { email, alias } = payload;
-
   const existingUser = await User.findOne({
     $or: [{ email }, { alias }],
   });
-
   if (existingUser) {
     throwHttpError("User with provided email or alias already exists", 409);
   }
@@ -47,7 +45,6 @@ export const registerUser = async (payload) => {
 
 export const loginUser = async ({ identifier, password }) => {
   const normalizedIdentifier = identifier?.trim().toLowerCase();
-
   const user = await User.findOne({
     $or: [{ email: normalizedIdentifier }, { alias: normalizedIdentifier }],
   }).select("+password");
@@ -57,9 +54,8 @@ export const loginUser = async ({ identifier, password }) => {
   }
 
   const isMatch = await comparePassword(password, user.password);
-
   if (!isMatch) {
-    throwHttpError("Invalid credentials", 401);
+    throwHttpError("Password mismatch", 401);
   }
 
   const token = generateToken(user._id, user.role);
