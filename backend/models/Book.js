@@ -48,16 +48,14 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
-bookSchema.pre("save", function normalizeCopies(next) {
+bookSchema.pre("save", function normalizeCopies() {
   if (this.availableCopies == null) {
     this.availableCopies = this.totalCopies;
   }
 
   if (this.availableCopies > this.totalCopies) {
     this.availableCopies = this.totalCopies;
-  }
-
-  next();
+  };
 });
 
 bookSchema.methods.incrementCopies = function incrementCopies(count = 1) {

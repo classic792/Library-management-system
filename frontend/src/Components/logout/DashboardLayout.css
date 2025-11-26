@@ -1,0 +1,69 @@
+/* MAIN WRAPPER — full screen width + height */
+.layout-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #f5f6fa; /* fallback */
+}
+
+/* SIDEBAR ALWAYS FULL HEIGHT */
+.sidebar {
+  width: 500px;
+  min-width: 100px;
+  background: #1e1e2f;
+  color: white;
+
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0; */
+}
+
+/* RIGHT SIDE CONTENT AREA */
+.layout-content {
+  margin-left: 0px;      
+  width: 100%;  
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: white;        /* 👈 THIS ENSURES FULL WHITE BACKGROUND */
+}
+
+/* NAVBAR */
+.navbar {
+  height: 60px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* MAIN PAGE CONTENT BELOW NAVBAR */
+.content-area {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  background: white;    /* 👈 THIS makes sure the white fills the screen */
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: 0.3s ease;
+    width: 200px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .layout-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}

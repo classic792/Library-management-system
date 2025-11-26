@@ -52,11 +52,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function encryptPassword(next) {
+userSchema.pre("save", async function encryptPassword() {
   if (!this.isModified("password")) return next();
   this.password = await hashPassword(this.password);
   this.confirmPassword = undefined;
-  next();
+  
 });
 
 userSchema.pre("findOneAndUpdate", async function (next) {
