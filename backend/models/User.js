@@ -3,7 +3,13 @@ import { hashPassword } from "../utils/passwordHash.js";
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+    },
+    lastName: {
       type: String,
       required: true,
       trim: true,
@@ -53,10 +59,9 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function encryptPassword(next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password")) return;
   this.password = await hashPassword(this.password);
   this.confirmPassword = undefined;
-  next();
 });
 
 userSchema.pre("findOneAndUpdate", async function (next) {
