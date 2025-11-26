@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import './LoginRegister.css';
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginRegister = () => {
 
     const [action, setAction] = useState('');
+    const [loginUsername, setLoginUsername] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [registerUsername, setRegisterUsername] = useState('');
     const [registerEmail, setRegisterEmail] = useState('');
+    const [registerPassword, setRegisterPassword] = useState('');
+    const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [loginMessage, setLoginMessage] = useState('');
     const [registerMessage, setRegisterMessage] = useState('');
     const [termsChecked, setTermsChecked] = useState(false);
+    const [showLoginPassword, setShowLoginPassword] = useState(false);
+    const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const registerLink = () => {
         setAction(' active');
@@ -38,14 +46,26 @@ const LoginRegister = () => {
 
     const handleLoginSubmit = (event) => {
         event.preventDefault();
+        if (!loginUsername || !loginPassword) {
+            setLoginMessage('Fill in username and password');
+            return;
+        }
         setLoginMessage('All good');
         setTimeout(() => setLoginMessage(''), 3000);
     };
 
     const handleRegisterSubmit = (event) => {
         event.preventDefault();
-        if (!registerEmail || emailError) {
+        if (!registerUsername || !registerEmail || !registerPassword || !registerConfirmPassword) {
+            setRegisterMessage('Please complete all fields');
+            return;
+        }
+        if (emailError) {
             setEmailError((prev) => prev || 'Enter a valid email address');
+            return;
+        }
+        if (registerPassword !== registerConfirmPassword) {
+            setRegisterMessage('Passwords do not match');
             return;
         }
         if (!termsChecked) {
@@ -62,12 +82,30 @@ const LoginRegister = () => {
                 <form onSubmit={handleLoginSubmit} noValidate>
                     <h1>Login</h1>
                     <div className="input-box">
-                        <input type="text" placeholder="Username" required/>
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={loginUsername}
+                            onChange={(e) => setLoginUsername(e.target.value)}
+                            required
+                        />
                         <FaUser className="icon"/>
                     </div>
                     <div className="input-box">
-                        <input type="password" placeholder="Password" required/>
-                        <FaLock className="icon" /> 
+                        <input
+                            type={showLoginPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                            required
+                        />
+                        <span 
+                            className="icon" 
+                            onClick={() => setShowLoginPassword(!showLoginPassword)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {showLoginPassword ? <FaEyeSlash /> : <FaLock />}
+                        </span>
                     </div>
                     
                     <div className="remember-forgot">
@@ -75,7 +113,7 @@ const LoginRegister = () => {
                         <a href="#">Forgot password?</a>
                     </div>
 
-                    <button type="submit">Login</button>
+                    <button type="submit" disabled={!loginUsername || !loginPassword}>Login</button>
                     {loginMessage && <p className="feedback-msg" aria-live="polite">{loginMessage}</p>}
 
                     <div className="register-link">
@@ -88,7 +126,21 @@ const LoginRegister = () => {
                 <form onSubmit={handleRegisterSubmit} noValidate>
                     <h1>Registration</h1>
                     <div className="input-box">
-                        <input type="text" placeholder="Username" required/>
+                        <input type="text" placeholder="First Name" required/>
+                        <FaUser className="icon"/>
+                    </div>
+                    <div className="input-box">
+                        <input type="text" placeholder="Last Name" required/>
+                        <FaUser className="icon"/>
+                    </div>
+                    <div className="input-box">
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={registerUsername}
+                            onChange={(e) => setRegisterUsername(e.target.value)}
+                            required
+                        />
                         <FaUser className="icon"/>
                     </div>
                     <div className="input-box">
@@ -104,9 +156,45 @@ const LoginRegister = () => {
                     </div>
                     {emailError && <p className="error-msg">{emailError}</p>}
                     <div className="input-box">
-                        <input type="password" placeholder="Password" required/>
-                        <FaLock className="icon" /> 
+                        <input
+                            type={showRegisterPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={registerPassword}
+                            onChange={(e) => setRegisterPassword(e.target.value)}
+                            required
+                        />
+                        <span 
+                            className="icon" 
+                            onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {showRegisterPassword ? <FaEyeSlash /> : <FaLock />}
+                        </span>
                     </div>
+                    <div className="input-box">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="Confirm Password"
+                            value={registerConfirmPassword}
+                            onChange={(e) => setRegisterConfirmPassword(e.target.value)}
+                            required
+                            className={
+                                registerConfirmPassword && registerPassword !== registerConfirmPassword
+                                    ? 'input-error'
+                                    : ''
+                            }
+                        />
+                        <span 
+                            className="icon" 
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {showConfirmPassword ? <FaEyeSlash /> : <FaLock />}
+                        </span>
+                    </div>
+                    {registerConfirmPassword && registerPassword !== registerConfirmPassword && (
+                        <p className="error-msg">Passwords must match</p>
+                    )}
                     
                     <div className="remember-forgot">
                         <label>
@@ -119,7 +207,20 @@ const LoginRegister = () => {
                         </label>
                     </div>
 
-                    <button type="submit" disabled={!!emailError || !termsChecked}>Register</button>
+                    <button
+                        type="submit"
+                        disabled={
+                            !!emailError ||
+                            !termsChecked ||
+                            !registerUsername ||
+                            !registerEmail ||
+                            !registerPassword ||
+                            !registerConfirmPassword ||
+                            registerPassword !== registerConfirmPassword
+                        }
+                    >
+                        Register
+                    </button>
                     {registerMessage && <p className="feedback-msg" aria-live="polite">{registerMessage}</p>}
 
                     <div className="register-link">
