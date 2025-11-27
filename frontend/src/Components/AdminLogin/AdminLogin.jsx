@@ -1,27 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
-import { FaUser, FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope, FaEyeSlash } from "react-icons/fa";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [action, setAction] = useState('');
-  const [loginUsername, setLoginUsername] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [registerUsername, setRegisterUsername] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [loginMessage, setLoginMessage] = useState('');
-  const [registerMessage, setRegisterMessage] = useState('');
+  const [action, setAction] = useState("");
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [loginMessage, setLoginMessage] = useState("");
+  const [registerMessage, setRegisterMessage] = useState("");
   const [termsChecked, setTermsChecked] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const registerLink = () => setAction(' active');
-  const loginLink = () => setAction('');
+  const registerLink = () => setAction(" active");
+  const loginLink = () => setAction("");
 
   const validateEmail = (value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,44 +31,50 @@ const AdminLogin = () => {
   const handleEmailChange = (event) => {
     const { value } = event.target;
     setRegisterEmail(value);
-    if (!value) setEmailError('Email is required');
-    else if (!validateEmail(value)) setEmailError('Enter a valid email address');
-    else setEmailError('');
+    if (!value) setEmailError("Email is required");
+    else if (!validateEmail(value))
+      setEmailError("Enter a valid email address");
+    else setEmailError("");
   };
 
   const handleLoginSubmit = (event) => {
     event.preventDefault();
     if (!loginUsername || !loginPassword) {
-      setLoginMessage('Fill in username and password');
+      setLoginMessage("Fill in username and password");
       return;
     }
 
     // Mock successful login
-    setLoginMessage('Login successful!');
+    setLoginMessage("Login successful!");
     setTimeout(() => {
-      setLoginMessage('');
-      navigate('/admin/dashboard'); // Navigate to AdminDashboard
+      setLoginMessage("");
+      navigate("/admin/login"); // Navigate to AdminDashboard
     }, 1000);
   };
 
   const handleRegisterSubmit = (event) => {
     event.preventDefault();
-    if (!registerUsername || !registerEmail || !registerPassword || !registerConfirmPassword) {
-      setRegisterMessage('Please complete all fields');
+    if (
+      !registerUsername ||
+      !registerEmail ||
+      !registerPassword ||
+      !registerConfirmPassword
+    ) {
+      setRegisterMessage("Please complete all fields");
       return;
     }
     if (emailError) return;
     if (registerPassword !== registerConfirmPassword) {
-      setRegisterMessage('Passwords do not match');
+      setRegisterMessage("Passwords do not match");
       return;
     }
     if (!termsChecked) {
-      setRegisterMessage('Please accept the terms to continue');
+      setRegisterMessage("Please accept the terms to continue");
       return;
     }
 
-    setRegisterMessage('Registration successful!');
-    setTimeout(() => setRegisterMessage(''), 3000);
+    setRegisterMessage("Registration successful!");
+    setTimeout(() => setRegisterMessage(""), 3000);
   };
 
   return (
@@ -100,22 +106,35 @@ const AdminLogin = () => {
             <span
               className="icon"
               onClick={() => setShowLoginPassword(!showLoginPassword)}
-              style={{ cursor: 'pointer' }}
-            >
+              style={{ cursor: "pointer" }}>
               {showLoginPassword ? <FaEyeSlash /> : <FaLock />}
             </span>
           </div>
 
           <div className="remember-forgot">
-            <label><input type="checkbox" />Remember me</label>
+            <label>
+              <input type="checkbox" />
+              Remember me
+            </label>
             <a href="#">Forgot password?</a>
           </div>
 
-          <button type="submit" disabled={!loginUsername || !loginPassword}>Login</button>
-          {loginMessage && <p className="feedback-msg" aria-live="polite">{loginMessage}</p>}
+          <button type="submit" disabled={!loginUsername || !loginPassword}>
+            Login
+          </button>
+          {loginMessage && (
+            <p className="feedback-msg" aria-live="polite">
+              {loginMessage}
+            </p>
+          )}
 
           <div className="register-link">
-            <p>Don't have an account? <a href="#" onClick={registerLink}>Register</a></p>
+            <p>
+              Don't have an account?{" "}
+              <a href="#" onClick={registerLink}>
+                Register
+              </a>
+            </p>
           </div>
         </form>
       </div>
@@ -153,7 +172,7 @@ const AdminLogin = () => {
               value={registerEmail}
               onChange={handleEmailChange}
               required
-              className={emailError ? 'input-error' : ''}
+              className={emailError ? "input-error" : ""}
             />
             <FaEnvelope className="icon" />
           </div>
@@ -170,8 +189,7 @@ const AdminLogin = () => {
             <span
               className="icon"
               onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-              style={{ cursor: 'pointer' }}
-            >
+              style={{ cursor: "pointer" }}>
               {showRegisterPassword ? <FaEyeSlash /> : <FaLock />}
             </span>
           </div>
@@ -183,19 +201,24 @@ const AdminLogin = () => {
               value={registerConfirmPassword}
               onChange={(e) => setRegisterConfirmPassword(e.target.value)}
               required
-              className={registerConfirmPassword && registerPassword !== registerConfirmPassword ? 'input-error' : ''}
+              className={
+                registerConfirmPassword &&
+                registerPassword !== registerConfirmPassword
+                  ? "input-error"
+                  : ""
+              }
             />
             <span
               className="icon"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={{ cursor: 'pointer' }}
-            >
+              style={{ cursor: "pointer" }}>
               {showConfirmPassword ? <FaEyeSlash /> : <FaLock />}
             </span>
           </div>
-          {registerConfirmPassword && registerPassword !== registerConfirmPassword && (
-            <p className="error-msg">Passwords must match</p>
-          )}
+          {registerConfirmPassword &&
+            registerPassword !== registerConfirmPassword && (
+              <p className="error-msg">Passwords must match</p>
+            )}
 
           <div className="remember-forgot">
             <label>
@@ -218,14 +241,22 @@ const AdminLogin = () => {
               !registerPassword ||
               !registerConfirmPassword ||
               registerPassword !== registerConfirmPassword
-            }
-          >
+            }>
             Register
           </button>
-          {registerMessage && <p className="feedback-msg" aria-live="polite">{registerMessage}</p>}
+          {registerMessage && (
+            <p className="feedback-msg" aria-live="polite">
+              {registerMessage}
+            </p>
+          )}
 
           <div className="register-link">
-            <p>Already have an account? <a href="#" onClick={loginLink}>Login</a></p>
+            <p>
+              Already have an account?{" "}
+              <a href="#" onClick={loginLink}>
+                Login
+              </a>
+            </p>
           </div>
         </form>
       </div>
