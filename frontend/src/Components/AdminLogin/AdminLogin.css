@@ -1,11 +1,11 @@
-.wrapper {
+.admin-wrapper {
     position: relative;
     width: 420px;
     height: 450px;
-    background: transparent;
+    background: black;
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(30px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(245, 168, 26, 0.2);
     border-radius: 10px;
     color: whitesmoke;
     display: flex;
@@ -16,27 +16,27 @@
     margin: 40px auto 20px;
 }
 
-.wrapper.active{
+.admin-wrapper.active{
     height: 520px;
     overflow: hidden;
 }
 
-.wrapper .form-box {
+.admin-wrapper .form-box {
     width: 100%;
     padding: 40px;
 }
 
-.wrapper .form-box.login {
+.admin-wrapper .form-box.login {
     transition: translate .18s ease;
     translate: 0;
 }
 
-.wrapper.active .form-box.login {
+.admin-wrapper.active .form-box.login {
     transition: none;
     translate: -400px;
 }
 
-.wrapper .form-box.register {
+.admin-wrapper .form-box.register {
     position: absolute;
     transition: none;
     translate: 400px;
@@ -44,35 +44,35 @@
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    scrollbar-color: rgba(225, 225, 225, 225) transparent;
 }
 
-.wrapper.active .form-box.register {
+.admin-wrapper.active .form-box.register {
     transition: translate .18s ease;
     translate: 0;
     max-height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    scrollbar-color: rgba(225, 225, 225, 225) transparent;
 }
 
 /* Custom scrollbar for register form */
-.wrapper .form-box.register::-webkit-scrollbar {
+.admin-wrapper .form-box.register::-webkit-scrollbar {
     width: 6px;
 }
 
-.wrapper .form-box.register::-webkit-scrollbar-track {
+.admin-wrapper .form-box.register::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 10px;
 }
 
-.wrapper .form-box.register::-webkit-scrollbar-thumb {
+.admin-wrapper .form-box.register::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
 
-.wrapper .form-box.register::-webkit-scrollbar-thumb:hover {
+.admin-wrapper .form-box.register::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -97,12 +97,12 @@ form .input-box {
     border: 2px solid rgba(255, 255, 255, .1);
     border-radius: 40px;
     font-size: 16px;
-    color: black;
+    color: whitesmoke;
     padding: 20px 45px 20px 20px;
 }
 
 .input-box input::placeholder {
-    color: black;
+    color: whitesmoke;
 }
 
 .input-box .icon {
@@ -121,12 +121,12 @@ form .remember-forgot {
 }
 
 .remember-forgot label input {
-    accent-color: black;
+    accent-color: whitesmoke;
     margin-right: 4px;
 }
 
 .remember-forgot a {
-    color: black;
+    color: whitesmoke;
     text-decoration: none;
 }
 
@@ -137,14 +137,14 @@ form .remember-forgot {
 form button {
     width: 100%;
     height: 45px;
-    background: black;
+    background: whitesmoke;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
     font-size: 16px;
-    color: whitesmoke;
+    color: black;
     font-weight: 700;
     transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
@@ -166,7 +166,7 @@ form .register-link {
 }
 
 .register-link p a {
-    color: black;
+    color: whitesmoke;
     text-decoration: none;
     font-weight: 600;
 }
@@ -196,13 +196,13 @@ form .register-link {
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
-    .wrapper {
+    .admin-wrapper {
         width: 90vw;
         max-width: 420px;
         margin: 0 auto;
     }
 
-    .wrapper .form-box {
+    .admin-wrapper .form-box {
         padding: 32px;
     }
 }
@@ -212,7 +212,7 @@ form .register-link {
         padding: 0 12px;
     }
 
-    .wrapper {
+    .admin-wrapper {
         width: 100%;
         max-width: none;
         height: auto;
@@ -221,11 +221,11 @@ form .register-link {
         padding: 18px 10px 24px;
     }
 
-    .wrapper.active {
+    .admin-wrapper.active {
         height: auto;
     }
 
-    .wrapper .form-box {
+    .admin-wrapper .form-box {
         padding: 24px 12px;
     }
 
