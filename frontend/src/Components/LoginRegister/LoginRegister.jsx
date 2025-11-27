@@ -85,7 +85,7 @@ const LoginRegister = () => {
       <div className="form-box login">
         <form onSubmit={handleLoginSubmit} noValidate>
           <h1>Login</h1>
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type="text"
               placeholder="Username or Email"
@@ -95,7 +95,7 @@ const LoginRegister = () => {
             />
             <FaUser className="icon" />
           </div>
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type={showLoginPassword ? "text" : "password"}
               placeholder="Password"
@@ -111,7 +111,7 @@ const LoginRegister = () => {
             </span>
           </div>
 
-          <div className="remember-forgot">
+          <div className="user-remember-forgot">
             <label>
               <input type="checkbox" />
               Remember me
@@ -128,7 +128,7 @@ const LoginRegister = () => {
             </p>
           )}
 
-          <div className="register-link">
+          <div className="user-register-link">
             <p>
               Don't have an account?{" "}
               <a href="#" onClick={registerLink}>
@@ -142,15 +142,15 @@ const LoginRegister = () => {
       <div className="form-box register">
         <form onSubmit={handleRegisterSubmit} noValidate>
           <h1>Registration</h1>
-          <div className="input-box">
+          <div className="user-input-box">
             <input type="text" placeholder="First Name" required />
             <FaUser className="icon" />
           </div>
-          <div className="input-box">
+          <div className="user-input-box">
             <input type="text" placeholder="Last Name" required />
             <FaUser className="icon" />
           </div>
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type="text"
               placeholder="Username"
@@ -160,7 +160,7 @@ const LoginRegister = () => {
             />
             <FaUser className="icon" />
           </div>
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type="email"
               placeholder="Email"
@@ -172,7 +172,7 @@ const LoginRegister = () => {
             <FaEnvelope className="icon" />
           </div>
           {emailError && <p className="error-msg">{emailError}</p>}
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type={showRegisterPassword ? "text" : "password"}
               placeholder="Password"
@@ -187,7 +187,7 @@ const LoginRegister = () => {
               {showRegisterPassword ? <FaEyeSlash /> : <FaLock />}
             </span>
           </div>
-          <div className="input-box">
+          <div className="user-input-box">
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
@@ -213,7 +213,7 @@ const LoginRegister = () => {
               <p className="error-msg">Passwords must match</p>
             )}
 
-          <div className="remember-forgot">
+          <div className="user-remember-forgot">
             <label>
               <input
                 type="checkbox"
@@ -243,7 +243,7 @@ const LoginRegister = () => {
             </p>
           )}
 
-          <div className="register-link">
+          <div className="user-register-link">
             <p>
               Already have an account?{" "}
               <a href="#" onClick={loginLink}>

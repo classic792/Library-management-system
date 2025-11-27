@@ -42,7 +42,7 @@ body.dashboard-active {
 }
 
 .logo-line {
-    background-color: #ff6b35;
+    background-color: #fdd526;
     border-radius: 3px;
 }
 
@@ -102,6 +102,22 @@ body.dashboard-active {
 
 .nav-icon {
     font-size: 16px;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.logout-btn:hover {
+    color: #e74c3c;
+}
+
+.mobile-nav-item.logout-btn {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
 }
 
 /* Mobile Menu Toggle Button */

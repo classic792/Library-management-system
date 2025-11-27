@@ -48,7 +48,7 @@ const AdminLogin = () => {
     setLoginMessage("Login successful!");
     setTimeout(() => {
       setLoginMessage("");
-      navigate("/admin/login"); // Navigate to AdminDashboard
+      navigate("/admin/dashboard"); // Navigate to AdminDashboard
     }, 1000);
   };
 

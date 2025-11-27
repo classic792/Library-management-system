@@ -42,7 +42,7 @@ body.dashboard-active {
 }
 
 .logo-line {
-    background-color: #ff6b35;
+    background-color: #fdd526;
     border-radius: 3px;
 }
 
@@ -96,7 +96,7 @@ body.dashboard-active {
 }
 
 .nav-item.active {
-    background-color: #ff6b35;
+    background-color: #fdd526;
     color: white;
 }
 
@@ -250,6 +250,7 @@ body.dashboard-active {
 .form-group input {
     padding: 12px 16px;
     border: 2px solid #e0e0e0;
+    width: 100%;
     border-radius: 8px;
     font-size: 15px;
     font-family: "Poppins", sans-serif;
@@ -345,7 +346,7 @@ body.dashboard-active {
 }
 
 .submit-btn {
-    background-color: #ff6b35;
+    background-color: #fdd526;
     color: white;
 }
 
@@ -368,6 +369,63 @@ body.dashboard-active {
 .reset-btn:hover {
     background-color: #e8e8e8;
     border-color: #ccc;
+}
+
+/* Image Upload Toggle */
+.upload-method-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    border-color: #e55a2b;
+    background: #e55a2b;
+}
+
+.toggle-btn.active {
+    border-color: #fdd526;
+    background: #fdd526;
+    color: white;
+}
+
+.upload-section {
+    margin-top: 10px;
+}
+
+.upload-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+input[type="file"] {
+    padding: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+}
+
+input[type="file"]:hover {
+    border-color: #4a90e2;
 }
 
 /* Responsive Design */

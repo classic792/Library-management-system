@@ -7,7 +7,7 @@
     backdrop-filter: blur(30px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     border-radius: 10px;
-    color: whitesmoke;
+    color: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,14 +81,14 @@ form h1 {
     text-align: center;
 }
 
-form .input-box {
+form .user-input-box {
     position: relative;
     width: 100%;
     height: 50px;
     margin: 30px 0;
 }
 
-.input-box input {
+.user-input-box input {
     width: 100%;
     height: 100%;
     background: transparent;
@@ -101,11 +101,11 @@ form .input-box {
     padding: 20px 45px 20px 20px;
 }
 
-.input-box input::placeholder {
+.user-input-box input::placeholder {
     color: black;
 }
 
-.input-box .icon {
+.user-input-box .icon {
     position: absolute;
     right: 20px;
     top: 50%;
@@ -113,24 +113,24 @@ form .input-box {
     font-size: 16px;
 }
 
-form .remember-forgot {
+form .user-remember-forgot {
     display: flex;
     justify-content: space-between;
     font-size: 14.5px;
     margin: -15px 0 15px;
 }
 
-.remember-forgot label input {
+.user-remember-forgot label input {
     accent-color: black;
     margin-right: 4px;
 }
 
-.remember-forgot a {
+.user-remember-forgot a {
     color: black;
     text-decoration: none;
 }
 
-.remember-forgot a:hover {
+.user-remember-forgot a:hover {
     text-decoration: underline;
 }
 
@@ -159,19 +159,19 @@ form button:disabled {
     cursor: not-allowed;
 }
 
-form .register-link {
+form .user-register-link {
     font-size: 14.5px;
     text-align: center;
     margin: 20px 0 15px;
 }
 
-.register-link p a {
+.user-register-link p a {
     color: black;
     text-decoration: none;
     font-weight: 600;
 }
 
-.register-link p a:hover {
+.user-register-link p a:hover {
     text-decoration: underline;
 }
 
@@ -233,11 +233,11 @@ form .register-link {
         font-size: 28px;
     }
 
-    .input-box {
+    .user-input-box {
         margin: 24px 0;
     }
 
-    form .remember-forgot {
+    form .user-remember-forgot {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
