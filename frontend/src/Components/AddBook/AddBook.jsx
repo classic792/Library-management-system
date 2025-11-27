@@ -322,7 +322,7 @@ const AddBook = () => {
                   value={formData.totalCopies}
                   onChange={handleChange}
                   className={errors.totalCopies ? "error" : ""}
-                  placeholder="Enter number of copies"
+                  placeholder="Enter number of total copies"
                   min="1"
                 />
                 {errors.totalCopies && (
@@ -331,7 +331,7 @@ const AddBook = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="availableCopies">Total Copies *</label>
+                <label htmlFor="availableCopies">Available Copies *</label>
                 <input
                   type="number"
                   id="availableCopies"
