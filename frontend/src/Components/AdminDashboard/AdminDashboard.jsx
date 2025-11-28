@@ -42,13 +42,45 @@ const AdminDashboard = () => {
             document.body.style.display = '';
         };
     }, []);
-    // Mock data - replace with API calls later
+
+    // Mock data (will be replaced by API call)
     const stats = {
         totalBooks: 0,
         available: 0,
         borrowed: 0,
         totalCopies: 0
     };
+
+    // Data for Category Distribution
+    const categoryData = [
+        { name: 'Fiction', value: 0, color: '#4a90e2', percentage: 0 },
+        { name: 'Science', value: 0, color: '#50c878', percentage: 0 },
+        { name: 'History', value: 0, color: '#f39c12', percentage: 0 },
+        { name: 'Technology', value: 0, color: '#e74c3c', percentage: 0 },
+        { name: 'Biography', value: 0, color: '#9b59b6', percentage: 0 }
+    ];
+
+    // Data for Books Added Over Time
+    const monthlyData = [
+        { month: 'Jan', books: 0 },
+        { month: 'Feb', books: 0 },
+        { month: 'Mar', books: 0 },
+        { month: 'Apr', books: 0 },
+        { month: 'May', books: 0 },
+        { month: 'Jun', books: 0 },
+        { month: 'Jul', books: 0 }
+    ];
+
+    // Data for Book Status
+    const statusData = [
+        { status: 'Available', count: 0, color: '#50c878' },
+        { status: 'Borrowed', count: 0, color: '#f39c12' },
+        { status: 'Reserved', count: 0, color: '#4a90e2' },
+        { status: 'Overdue', count: 0, color: '#e74c3c' }
+    ];
+
+    const maxMonthlyBooks = Math.max(...monthlyData.map(d => d.books));
+    const maxStatusCount = Math.max(...statusData.map(d => d.count));
 
     return (
         <div className="admin-dashboard">
@@ -198,13 +230,78 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {/* Welcome Section */}
-                <div className="welcome-section">
-                    <h2 className="welcome-title">Welcome to LibraSystem</h2>
-                    <p className="welcome-text">
-                        Manage your library efficiently with our comprehensive book management system. 
-                        Track books, monitor availability, and organize your collection with ease.
-                    </p>
+                {/* Chart section */}
+                <div className="charts-section">
+                    <div className="charts-grid">
+                        {/* Category Distribution - Custom Bar Chart */}
+                        <div className="chart-card">
+                            <h2 className="chart-title">Category Distribution</h2>
+                            <div className="custom-chart">
+                                {categoryData.map((category, index) => (
+                                    <div key={index} className="chart-bar-row">
+                                        <div className="chart-label">{category.name}</div>
+                                        <div className="chart-bar-container">
+                                            <div 
+                                                className="chart-bar"
+                                                style={{
+                                                    width: `${category.percentage}%`,
+                                                    backgroundColor: category.color
+                                                }}
+                                            >
+                                                <span className="chart-bar-value">{category.value}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Book Status - Custom Bar Chart */}
+                        <div className="chart-card">
+                            <h2 className="chart-title">Book Status Overview</h2>
+                            <div className="custom-chart">
+                                {statusData.map((status, index) => (
+                                    <div key={index} className="chart-bar-row">
+                                        <div className="chart-label">{status.status}</div>
+                                        <div className="chart-bar-container">
+                                            <div 
+                                                className="chart-bar"
+                                                style={{
+                                                    width: `${(status.count / maxStatusCount) * 100}%`,
+                                                    backgroundColor: status.color
+                                                }}
+                                            >
+                                                <span className="chart-bar-value">{status.count}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Books Added Over Time - Custom Line Chart */}
+                    <div className="chart-card full-width">
+                        <h2 className="chart-title">Books Added Over Time</h2>
+                        <div className="line-chart">
+                            <div className="line-chart-grid">
+                                {monthlyData.map((data, index) => (
+                                    <div key={index} className="line-chart-bar">
+                                        <div 
+                                            className="line-chart-column"
+                                            style={{
+                                                height: `${(data.books / maxMonthlyBooks) * 100}%`,
+                                                backgroundColor: '#4a90e2'
+                                            }}
+                                        >
+                                            <span className="line-chart-value">{data.books}</span>
+                                        </div>
+                                        <div className="line-chart-label">{data.month}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
