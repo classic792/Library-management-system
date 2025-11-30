@@ -5,7 +5,7 @@ import AdminLogin from "./Components/AdminLogin/AdminLogin";
 import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
 import Books from "./Components/Books/Books";
 import AddBook from "./Components/AddBook/AddBook";
-
+import UserDashboard from "./Components/userDashboard/userDashboard";
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +16,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/books" element={<Books />} />
         <Route path="/admin/add-book" element={<AddBook />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
         {/* Add more routes as needed */}
         <Route />
       </Routes>
