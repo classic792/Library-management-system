@@ -11,6 +11,8 @@ const sanitizeUser = (userDoc) => {
 
 const generateToken = (userId, role) => {
   const secret = process.env.JWT_SECRET || "dev-secret";
+  //activate this line in production and remove "dev-secret" above
+  // TODO:if (!secret) throw new Error('Missing JWT_SECRET');
   const expiresIn = process.env.JWT_EXPIRES_IN || "1d";
   return jwt.sign({ sub: userId, role }, secret, { expiresIn });
 };
@@ -43,8 +45,16 @@ export const registerUser = async (payload) => {
   };
 };
 
-export const loginUser = async ({ identifier, password }) => {
-  const normalizedIdentifier = identifier?.trim().toLowerCase();
+export const loginUser = async (payload) => {
+  const raw =
+    payload?.email ||
+    payload?.alias ||
+    payload?.identifier ||
+    payload?.emailOrAlias;
+  const password = payload?.password;
+  const normalizedIdentifier = raw?.trim().toLowerCase();
+  if (!normalizedIdentifier || !password)
+    throwHttpError("Email/alias and password required", 400);
   const user = await User.findOne({
     $or: [{ email: normalizedIdentifier }, { alias: normalizedIdentifier }],
   }).select("+password");
