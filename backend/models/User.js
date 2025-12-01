@@ -36,17 +36,17 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
-    confirmPassword: {
-      type: String,
-      required: true,
-      select: false,
-      validate: {
-        validator(value) {
-          return value === this.password;
-        },
-        message: "Passwords do not match",
-      },
-    },
+    // confirmPassword: {
+    //   type: String,
+    //   required: true,
+    //   select: false,
+    //   validate: {
+    //     validator(value) {
+    //       return value === this.password;
+    //     },
+    //     message: "Passwords do not match",
+    //   },
+    // },
     role: {
       type: String,
       enum: ["admin", "member"],
@@ -58,6 +58,26 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema
+  .virtual("confirmPassword")
+  .get(function () {
+    return this._confirmPassword;
+  })
+  .set(function (val) {
+    this._confirmPassword = val;
+  });
+
+userSchema.pre("validate", function (next) {
+  if (this.isNew || this.isModified("password")) {
+    if (!this._confirmPassword) {
+      this.invalidate("confirmPassword", "Confirm password is required");
+    } else if (this.password !== this._confirmPassword) {
+      this.invalidate("confirmPassword", "Passwords do not match");
+    }
+  }
+  next();
+});
+
 userSchema.pre("save", async function encryptPassword(next) {
   if (!this.isModified("password")) return;
   this.password = await hashPassword(this.password);
@@ -66,11 +86,17 @@ userSchema.pre("save", async function encryptPassword(next) {
 
 userSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
-  if (update.password) {
-    update.password = await hashPassword(update.password);
-    update.confirmPassword = undefined;
-    this.setUpdate(update);
+  // supports both {$set: {password: ...}} and direct updates
+  const password = update.password || (update.$set && update.$set.password);
+  if (password) {
+    const hashed = await hashPassword(password);
+    if (update.password) update.password = hashed;
+    if (update.$set && update.$set.password) update.$set.password = hashed;
   }
+  // remove confirmPassword if present
+  if (update.confirmPassword) delete update.confirmPassword;
+  if (update.$set && update.$set.confirmPassword)
+    delete update.$set.confirmPassword;
   next();
 });
 
