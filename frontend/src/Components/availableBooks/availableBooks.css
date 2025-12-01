@@ -1,0 +1,70 @@
+/* Make the page take full width & height */
+.books-page {
+    width: 100%;
+    min-height: 100vh; /* Full screen height */
+    padding: 20px;
+    background: #f5f6fa; /* Light background for full-page look */
+    box-sizing: border-box;
+}
+
+/* Title spacing */
+.books-page h2 {
+    margin-bottom: 20px;
+}
+
+/* Responsive grid layout */
+.books-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    width: 100%;
+}
+
+/* Book card styling */
+.book-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.author {
+    font-size: 14px;
+    color: gray;
+}
+
+/* Status tag */
+.status {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.available {
+    background: #d4f8d4;
+    color: #1c8a2b;
+}
+
+.unavailable {
+    background: #ffe4e4;
+    color: #b30000;
+}
+
+/* Borrow button */
+.borrow-btn {
+    width: 100%;
+    padding: 10px;
+    background: royalblue;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.borrow-btn.disabled {
+    background: gray;
+    cursor: not-allowed;
+}

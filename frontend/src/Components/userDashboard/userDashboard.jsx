@@ -165,9 +165,133 @@ const UserDashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="activity-section">
-          <h2 className="section-title">Recent Activity</h2>
+    // sample recent activity
+    const recentActivity = [
+        { title: "The great Ezekiel", action: "Borrowed", date: "Jan 4, 2025" },
+        {
+            title: "History about Osman",
+            action: "Returned",
+            date: "Dec 1, 2025",
+        },
+    ];
+
+    return (
+        <div className="user-dashboard">
+            {/* Header */}
+            <header className="dashboard-header">
+                <Link to="/user/dashboard" className="logo-container">
+                    <div className="logo-icon">
+                        <div className="logo-line logo-line-1"></div>
+                        <div className="logo-line logo-line-2"></div>
+                        <div className="logo-line logo-line-3"></div>
+                    </div>
+                    <span className="logo-text">LibraSystem</span>
+                </Link>
+
+                <nav className="dashboard-nav">
+                    <Link
+                        to="/user/dashboard"
+                        className={`nav-item ${isActive("/user/dashboard") ? "active" : ""
+                            }`}
+                    >
+                        <FaBook /> <span>Dashboard</span>
+                    </Link>
+
+                    <Link
+                        to="/user/available-books"
+                        className={`nav-item ${isActive("/user/available-books") ? "active" : ""}`}
+                    >
+                        <FaBookmark /> <span>Available Books</span>
+                    </Link>
+
+                    <Link
+                        to="/user/borrow-history"
+                        className={`nav-item ${isActive("/user/borrow-history") ? "active" : ""}`}
+                    >
+                        <FaHistory /> <span>Borrow History</span>
+                    </Link>
+
+                    <button onClick={handleLogout} className="nav-item logout-btn">
+                        <FaSignOutAlt /> <span>Logout</span>
+                    </button>
+                </nav>
+
+                {/* Mobile button */}
+                <button
+                    className="mobile-menu-toggle"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                    {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+                </button>
+            </header>
+
+            {/* Mobile Menu */}
+            <div
+                className={`mobile-menu-overlay ${isMobileMenuOpen ? "active" : ""}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            >
+                <nav className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+                    <Link
+                        to="/user/dashboard"
+                        className={`mobile-nav-item ${isActive("/user/dashboard") ? "active" : ""
+                            }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <FaBook /> Dashboard
+                    </Link>
+
+                    <Link
+                        to="/user/books"
+                        className={`mobile-nav-item ${isActive("/user/books") ? "active" : ""
+                            }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <FaBookmark /> Available Books
+                    </Link>
+
+                    <Link
+                        to="/user/history"
+                        className={`mobile-nav-item ${isActive("/user/history") ? "active" : ""
+                            }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <FaHistory /> Borrow History
+                    </Link>
+
+                    <button
+                        className="mobile-nav-item logout-btn"
+                        onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            handleLogout();
+                        }}
+                    >
+                        <FaSignOutAlt /> Logout
+                    </button>
+                </nav>
+            </div>
+
+            {/* Main Content */}
+            <main className="dashboard-main">
+                <h1 className="dashboard-title">Welcome Back <s>USER</s> </h1> 
+                <p className="dashboard-subtitle">Here is your library activity</p>
+
+                {/* Stats */}
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <h3>Borrowed Books</h3>
+                        <p className="stat-value">{stats.borrowedBooks}</p>
+                    </div>
+
+                    <div className="stat-card">
+                        <h3>Reserved Books</h3>
+                        <p className="stat-value">{stats.reservedBooks}</p>
+                    </div>
+
+                    <div className="stat-card">
+                        <h3>Returned Books</h3>
+                        <p className="stat-value">{stats.returnedBooks}</p>
+                    </div>
+                </div>
 
           <div className="activity-list">
             {recentActivity.map((item, index) => (
