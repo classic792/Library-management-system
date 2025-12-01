@@ -6,6 +6,8 @@ import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
 import Books from "./Components/Books/Books";
 import AddBook from "./Components/AddBook/AddBook";
 import UserDashboard from "./Components/userDashboard/userDashboard";
+import AvailableBooks from "./Components/availableBooks/availableBooks";
+import BorrowHistory from "./Components/borrowHistory/history";
 function App() {
   return (
     <BrowserRouter>
@@ -17,6 +19,8 @@ function App() {
         <Route path="/admin/books" element={<Books />} />
         <Route path="/admin/add-book" element={<AddBook />} />
         <Route path="/user/dashboard" element={<UserDashboard />} />
+        <Route path="/user/available-books" element={<AvailableBooks />} />
+        <Route path="/user/borrow-history" element={<BorrowHistory />} />
         {/* Add more routes as needed */}
         <Route />
       </Routes>

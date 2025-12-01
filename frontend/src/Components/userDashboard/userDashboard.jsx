@@ -73,15 +73,15 @@ const UserDashboard = () => {
                     </Link>
 
                     <Link
-                        to="/user/books"
-                        className={`nav-item ${isActive("/user/books") ? "active" : ""}`}
+                        to="/user/available-books"
+                        className={`nav-item ${isActive("/user/available-books") ? "active" : ""}`}
                     >
                         <FaBookmark /> <span>Available Books</span>
                     </Link>
 
                     <Link
-                        to="/user/history"
-                        className={`nav-item ${isActive("/user/history") ? "active" : ""}`}
+                        to="/user/borrow-history"
+                        className={`nav-item ${isActive("/user/borrow-history") ? "active" : ""}`}
                     >
                         <FaHistory /> <span>Borrow History</span>
                     </Link>
