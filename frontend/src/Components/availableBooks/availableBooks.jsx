@@ -1,6 +1,6 @@
 import "./availableBooks.css";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import "../userDashboard/userDashboard.css";
 import {
   FaBook,
@@ -9,11 +9,12 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaSearch,
 } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const AvailableBooks = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const AvailableBooks = () => {
     };
   }, []);
 
+  // TODO: Replace this mock data with data loaded from the backend.
   const books = [
     { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
     {
@@ -50,6 +52,17 @@ const AvailableBooks = () => {
       available: true,
     },
   ];
+
+  const filteredBooks = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return books;
+
+    return books.filter((book) => {
+      const inTitle = book.title.toLowerCase().includes(term);
+      const inAuthor = book.author.toLowerCase().includes(term);
+      return inTitle || inAuthor;
+    });
+  }, [books, searchTerm]);
 
   return (
     <div className="books-page">
@@ -147,8 +160,21 @@ const AvailableBooks = () => {
 
       <h2 className="title">Available Books</h2>
 
+      {/* Search bar (title / author / ISBN / category during integration) */}
+      <div className="books-search-bar">
+        <div className="books-search-input-wrapper">
+          <FaSearch className="books-search-icon" />
+          <input
+            type="text"
+            placeholder="Search by title or author"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </div>
+
       <div className="books-grid">
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <div className="book-card" key={book.id}>
             <h3>{book.title}</h3>
             <p className="author">by {book.author}</p>

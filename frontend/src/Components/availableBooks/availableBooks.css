@@ -11,7 +11,45 @@
 }
 .title {
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 0 10px;
+}
+
+/* Search bar */
+.books-search-bar {
+  width: 90%;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.books-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 6px 14px;
+  gap: 8px;
+}
+
+.books-search-icon {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.books-search-input-wrapper input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.books-search-input-wrapper input::placeholder {
+  color: #aaa;
 }
 /* Responsive grid layout */
 .books-grid {
