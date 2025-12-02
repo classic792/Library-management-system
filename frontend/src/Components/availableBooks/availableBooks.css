@@ -1,0 +1,72 @@
+.books-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: rgb(245, 245, 245);
+  font-family: "Poppins", sans-serif;
+}
+
+/* Title spacing */
+.books-page h2 {
+  margin-bottom: 20px;
+}
+.title {
+  text-align: center;
+  margin: 20px 0;
+}
+/* Responsive grid layout */
+.books-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  width: 90%;
+  margin: auto;
+}
+
+/* Book card styling */
+.book-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.author {
+  font-size: 14px;
+  color: gray;
+}
+
+/* Status tag */
+.status {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.available {
+  background: #d4f8d4;
+  color: #1c8a2b;
+}
+
+.unavailable {
+  background: #ffe4e4;
+  color: #b30000;
+}
+
+/* Borrow button */
+.borrow-btn {
+  width: 100%;
+  padding: 10px;
+  background: #fdd526;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.borrow-btn.disabled {
+  background: gray;
+  cursor: not-allowed;
+}

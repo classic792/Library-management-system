@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./userDashboard.css";
+import "./availableBooks.css";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "../userDashboard/userDashboard.css";
 import {
   FaBook,
   FaHistory,
@@ -9,8 +10,9 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const UserDashboard = () => {
+const AvailableBooks = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,22 +35,24 @@ const UserDashboard = () => {
     };
   }, []);
 
-  // Mock Stats
-  const stats = {
-    borrowedBooks: 0,
-    reservedBooks: 0,
-    returnedBooks: 0,
-  };
-
-  // Recent Activity
-  const recentActivity = [
-    { title: "The great Ezekiel", action: "Borrowed", date: "Jan 4, 2025" },
-    { title: "History about Osman", action: "Returned", date: "Dec 1, 2025" },
-    { title: "nana kwame", action: "Borrowed", date: "Jan 4, 2025" },
+  const books = [
+    { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
+    {
+      id: 2,
+      title: "Clean Code",
+      author: "Robert C. Martin",
+      available: false,
+    },
+    {
+      id: 3,
+      title: "Rich Dad Poor Dad",
+      author: "Robert Kiyosaki",
+      available: true,
+    },
   ];
 
   return (
-    <div className="user-dashboard">
+    <div className="books-page">
       {/* Header */}
       <header className="dashboard-header">
         <Link to="/user/dashboard" className="logo-container">
@@ -141,48 +145,33 @@ const UserDashboard = () => {
         </nav>
       </div>
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        <h1 className="dashboard-title">
-          Welcome Back, <s>USER</s>
-        </h1>
-        <p className="dashboard-subtitle">Here is your library activity</p>
+      <h2 className="title">Available Books</h2>
 
-        {/* Stats */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Borrowed Books</h3>
-            <p className="stat-value">{stats.borrowedBooks}</p>
+      <div className="books-grid">
+        {books.map((book) => (
+          <div className="book-card" key={book.id}>
+            <h3>{book.title}</h3>
+            <p className="author">by {book.author}</p>
+
+            <span
+              className={`status ${
+                book.available ? "available" : "unavailable"
+              }`}>
+              {book.available ? "Available" : "Borrowed"}
+            </span>
+
+            {book.available ? (
+              <button className="borrow-btn">Borrow Book</button>
+            ) : (
+              <button className="borrow-btn disabled" disabled>
+                Not Available
+              </button>
+            )}
           </div>
-
-          <div className="stat-card">
-            <h3>Reserved Books</h3>
-            <p className="stat-value">{stats.reservedBooks}</p>
-          </div>
-
-          <div className="stat-card">
-            <h3>Returned Books</h3>
-            <p className="stat-value">{stats.returnedBooks}</p>
-          </div>
-        </div>
-
-        {/* Activity List */}
-        <div className="activity-list">
-          {recentActivity.map((item, index) => (
-            <div key={index} className="activity-item">
-              <div>
-                <p className="activity-title">{item.title}</p>
-                <p className="activity-date">{item.date}</p>
-              </div>
-              <span className={`activity-tag ${item.action.toLowerCase()}`}>
-                {item.action}
-              </span>
-            </div>
-          ))}
-        </div>
-      </main>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default UserDashboard;
+export default AvailableBooks;

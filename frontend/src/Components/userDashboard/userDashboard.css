@@ -1,10 +1,9 @@
 .user-dashboard {
   min-height: 100vh;
   width: 100%;
-  background: white;
+  background: rgb(245, 245, 245);
   font-family: "Poppins", sans-serif;
 }
-
 /* Header */
 .dashboard-header {
   background: white;
@@ -14,7 +13,6 @@
   align-items: center;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
-
 /* Logo */
 .logo-container {
   display: flex;

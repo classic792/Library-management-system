@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./userDashboard.css";
+import "./history.css";
+// import "../userDashboard/userDashboard.css";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaBook,
   FaHistory,
@@ -9,8 +10,9 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const UserDashboard = () => {
+const BorrowHistory = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,22 +35,24 @@ const UserDashboard = () => {
     };
   }, []);
 
-  // Mock Stats
-  const stats = {
-    borrowedBooks: 0,
-    reservedBooks: 0,
-    returnedBooks: 0,
-  };
-
-  // Recent Activity
-  const recentActivity = [
-    { title: "The great Ezekiel", action: "Borrowed", date: "Jan 4, 2025" },
-    { title: "History about Osman", action: "Returned", date: "Dec 1, 2025" },
-    { title: "nana kwame", action: "Borrowed", date: "Jan 4, 2025" },
+  const history = [
+    {
+      id: 1,
+      book: "Atomic Habits",
+      dateBorrowed: "2025-01-02",
+      returned: true,
+    },
+    { id: 2, book: "Clean Code", dateBorrowed: "2025-01-10", returned: false },
+    {
+      id: 3,
+      book: "Rich Dad Poor Dad",
+      dateBorrowed: "2025-01-12",
+      returned: true,
+    },
   ];
 
   return (
-    <div className="user-dashboard">
+    <div className="history-container">
       {/* Header */}
       <header className="dashboard-header">
         <Link to="/user/dashboard" className="logo-container">
@@ -89,7 +93,6 @@ const UserDashboard = () => {
             <FaSignOutAlt /> <span>Logout</span>
           </button>
         </nav>
-
         {/* Mobile Button */}
         <button
           className="mobile-menu-toggle"
@@ -98,7 +101,6 @@ const UserDashboard = () => {
         </button>
       </header>
 
-      {/* Mobile Menu */}
       <div
         className={`mobile-menu-overlay ${isMobileMenuOpen ? "active" : ""}`}
         onClick={() => setIsMobileMenuOpen(false)}>
@@ -141,48 +143,59 @@ const UserDashboard = () => {
         </nav>
       </div>
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        <h1 className="dashboard-title">
-          Welcome Back, <s>USER</s>
-        </h1>
-        <p className="dashboard-subtitle">Here is your library activity</p>
+      <h2 className="title">Borrow History</h2>
+      <div className="history-responsive">
+        <table className="history-table">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Date Borrowed</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((item) => (
+              <tr key={item.id}>
+                <td>{item.book}</td>
+                <td>{item.dateBorrowed}</td>
+                <td>
+                  <span
+                    className={`status-badge ${
+                      item.returned ? "returned" : "not-returned"
+                    }`}>
+                    {item.returned ? "Returned" : "Not Returned"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        {/* Stats */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Borrowed Books</h3>
-            <p className="stat-value">{stats.borrowedBooks}</p>
-          </div>
-
-          <div className="stat-card">
-            <h3>Reserved Books</h3>
-            <p className="stat-value">{stats.reservedBooks}</p>
-          </div>
-
-          <div className="stat-card">
-            <h3>Returned Books</h3>
-            <p className="stat-value">{stats.returnedBooks}</p>
-          </div>
-        </div>
-
-        {/* Activity List */}
-        <div className="activity-list">
-          {recentActivity.map((item, index) => (
-            <div key={index} className="activity-item">
-              <div>
-                <p className="activity-title">{item.title}</p>
-                <p className="activity-date">{item.date}</p>
-              </div>
-              <span className={`activity-tag ${item.action.toLowerCase()}`}>
-                {item.action}
-              </span>
+        {/* MOBILE CARD VIEW */}
+        <div className="history-cards">
+          {history.map((item) => (
+            <div className="history-card" key={item.id}>
+              <p>
+                <strong>Book:</strong> {item.book}
+              </p>
+              <p>
+                <strong>Date:</strong> {item.dateBorrowed}
+              </p>
+              <p>
+                <strong>Status:</strong>
+                <span
+                  className={`status-badge ${
+                    item.returned ? "returned" : "not-returned"
+                  }`}>
+                  {item.returned ? "Returned" : "Not Returned"}
+                </span>
+              </p>
             </div>
           ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 };
 
-export default UserDashboard;
+export default BorrowHistory;

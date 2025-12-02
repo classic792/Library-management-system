@@ -1,4 +1,4 @@
-.books-page {
+/* .books-page {
     min-height: 100vh;
     width: 100%;
     background-color: white;
@@ -8,7 +8,7 @@
 }
 
 /* Override body background when page is active */
-body.dashboard-active {
+/* body.dashboard-active {
     background: white !important;
     background-image: none !important;
     overflow: auto !important;
@@ -16,7 +16,7 @@ body.dashboard-active {
 }
 
 /* Header */
-.books-header {
+/* .books-header {
     background-color: white;
     width: 100%;
     padding: 20px 40px;
@@ -38,10 +38,10 @@ body.dashboard-active {
     display: flex;
     flex-direction: row;
     gap: 4px;
-    align-items: flex-end;
-}
+    align-items: flex-end; */
+/* } */
 
-.logo-line {
+/* .logo-line {
     background-color: #fdd526;
     border-radius: 3px;
 }
@@ -72,9 +72,9 @@ body.dashboard-active {
     display: flex;
     align-items: center;
     gap: 16px;
-}
+} */
 
-.nav-item {
+/* .nav-item {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -98,11 +98,11 @@ body.dashboard-active {
 .nav-item.active {
     background-color: #ff6b35;
     color: white;
-}
+} */
 
-.nav-icon {
+/* .nav-icon {
     font-size: 16px;
-}
+} */
 
 .logout-btn {
     background: none;
