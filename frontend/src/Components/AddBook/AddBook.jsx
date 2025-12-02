@@ -46,6 +46,14 @@ const AddBook = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    setFormData((prev) => {
+      // Revoke the previous URL if any
+      if (prev.imageUrl && prev.imageFile) {
+        URL.revokeObjectURL(prev.imageUrl);
+      }
+      return prev;
+    });
+
     if (file) {
       // Check if file is an image
       if (file.type.startsWith("image/")) {

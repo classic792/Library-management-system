@@ -6,6 +6,8 @@ const LoginRegister = () => {
   const [action, setAction] = useState("");
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerLastName, setRegisterLastName] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
@@ -56,6 +58,8 @@ const LoginRegister = () => {
   const handleRegisterSubmit = (event) => {
     event.preventDefault();
     if (
+      !registerFirstName ||
+      !registerLastName ||
       !registerUsername ||
       !registerEmail ||
       !registerPassword ||
@@ -143,11 +147,11 @@ const LoginRegister = () => {
         <form onSubmit={handleRegisterSubmit} noValidate>
           <h1>Registration</h1>
           <div className="user-input-box">
-            <input type="text" placeholder="First Name" required />
+            <input type="text" placeholder="First Name" required value={registerFirstName} onChange={(e) => setRegisterFirstName(e.target.value)} />
             <FaUser className="icon" />
           </div>
           <div className="user-input-box">
-            <input type="text" placeholder="Last Name" required />
+            <input type="text" placeholder="Last Name" required value={registerLastName} onChange={(e) => setRegisterLastName(e.target.value)} />
             <FaUser className="icon" />
           </div>
           <div className="user-input-box">
@@ -229,6 +233,8 @@ const LoginRegister = () => {
             disabled={
               !!emailError ||
               !termsChecked ||
+              !registerFirstName ||
+              !registerLastName ||
               !registerUsername ||
               !registerEmail ||
               !registerPassword ||

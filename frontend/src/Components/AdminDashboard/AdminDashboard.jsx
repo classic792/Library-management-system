@@ -297,7 +297,7 @@ const AdminDashboard = () => {
                       <div
                         className="chart-bar"
                         style={{
-                          width: `${(status.count / maxStatusCount) * 100}%`,
+                          width: `${(status.count / Math.max(maxStatusCount, 1)) * 100}%`,
                           backgroundColor: status.color,
                         }}>
                         <span className="chart-bar-value">{status.count}</span>
@@ -319,7 +319,9 @@ const AdminDashboard = () => {
                     <div
                       className="line-chart-column"
                       style={{
-                        height: `${(data.books / maxMonthlyBooks) * 100}%`,
+                        height: `${
+                          (data.books / Math.max(maxMonthlyBooks, 1)) * 100
+                        }%`,
                         backgroundColor: "#f39c12",
                       }}>
                       <span className="line-chart-value">{data.books}</span>

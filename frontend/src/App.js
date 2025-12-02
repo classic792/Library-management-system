@@ -23,7 +23,6 @@ function App() {
         <Route path="/user/available-books" element={<AvailableBooks />} />
         <Route path="/user/borrow-history" element={<BorrowHistory />} />
         {/* Add more routes as needed */}
-        <Route />
       </Routes>
     </BrowserRouter>
   );
