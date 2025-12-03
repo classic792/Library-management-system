@@ -8,6 +8,7 @@ import AddBook from "./Components/AddBook/AddBook";
 import UserDashboard from "./Components/userDashboard/userDashboard";
 import AvailableBooks from "./Components/availableBooks/availableBooks";
 import BorrowHistory from "./Components/borrowHistory/history";
+import ProtectedRoute from "./protectedRoute";
 
 function App() {
   return (
@@ -16,12 +17,40 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin/books" element={<Books />} />
         <Route path="/admin/add-book" element={<AddBook />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="/user/available-books" element={<AvailableBooks />} />
-        <Route path="/user/borrow-history" element={<BorrowHistory />} />
+        <Route
+          path="/user/dashboard"
+          element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/available-books"
+          element={
+            <ProtectedRoute>
+              <AvailableBooks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/borrow-history"
+          element={
+            <ProtectedRoute>
+              <BorrowHistory />
+            </ProtectedRoute>
+          }
+        />
         {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>

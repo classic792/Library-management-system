@@ -36,17 +36,6 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
-    // confirmPassword: {
-    //   type: String,
-    //   required: true,
-    //   select: false,
-    //   validate: {
-    //     validator(value) {
-    //       return value === this.password;
-    //     },
-    //     message: "Passwords do not match",
-    //   },
-    // },
     role: {
       type: String,
       enum: ["admin", "member"],

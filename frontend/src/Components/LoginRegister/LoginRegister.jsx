@@ -1,8 +1,11 @@
+import { apiRequest } from "../../api";
 import React, { useState } from "react";
 import "./LoginRegister.css";
 import { FaUser, FaLock, FaEnvelope, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {
+  const navigate = useNavigate();
   const [action, setAction] = useState("");
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -45,17 +48,28 @@ const LoginRegister = () => {
     }
   };
 
-  const handleLoginSubmit = (event) => {
+  const handleLoginSubmit = async (event) => {
     event.preventDefault();
     if (!loginUsername || !loginPassword) {
       setLoginMessage("Fill in username and password");
       return;
     }
-    setLoginMessage("All good");
-    setTimeout(() => setLoginMessage(""), 3000);
+    try {
+      const response = await apiRequest("/auth/login", {
+        method: "POST",
+        body: { identifier: loginUsername, password: loginPassword },
+      });
+      localStorage.setItem("userToken", response.token);
+      // optionally store role/data
+      setLoginMessage("Login successful");
+      navigate("/user/dashboard"); // once you import useNavigate
+    } catch (error) {
+      setLoginMessage(error.message);
+      // setTimeout(() => setLoginMessage(""), 3000);
+    }
   };
 
-  const handleRegisterSubmit = (event) => {
+  const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     if (
       !registerFirstName ||
@@ -80,8 +94,25 @@ const LoginRegister = () => {
       setRegisterMessage("Please accept the terms to continue");
       return;
     }
-    setRegisterMessage("All good");
-    setTimeout(() => setRegisterMessage(""), 3000);
+    try {
+      const response = await apiRequest("/auth/signup", {
+        method: "POST",
+        body: {
+          firstName: registerFirstName,
+          lastName: registerLastName,
+          alias: registerUsername,
+          email: registerEmail,
+          password: registerPassword,
+          confirmPassword: registerConfirmPassword,
+          role: "member",
+        },
+      });
+      localStorage.setItem("userToken", response.token);
+      setRegisterMessage("Registration successful");
+      navigate("/user/dashboard");
+    } catch (error) {
+      setRegisterMessage(error.message);
+    }
   };
 
   return (
@@ -147,11 +178,23 @@ const LoginRegister = () => {
         <form onSubmit={handleRegisterSubmit} noValidate>
           <h1>Registration</h1>
           <div className="user-input-box">
-            <input type="text" placeholder="First Name" required value={registerFirstName} onChange={(e) => setRegisterFirstName(e.target.value)} />
+            <input
+              type="text"
+              placeholder="First Name"
+              required
+              value={registerFirstName}
+              onChange={(e) => setRegisterFirstName(e.target.value)}
+            />
             <FaUser className="icon" />
           </div>
           <div className="user-input-box">
-            <input type="text" placeholder="Last Name" required value={registerLastName} onChange={(e) => setRegisterLastName(e.target.value)} />
+            <input
+              type="text"
+              placeholder="Last Name"
+              required
+              value={registerLastName}
+              onChange={(e) => setRegisterLastName(e.target.value)}
+            />
             <FaUser className="icon" />
           </div>
           <div className="user-input-box">
@@ -262,5 +305,4 @@ const LoginRegister = () => {
     </div>
   );
 };
-
 export default LoginRegister;

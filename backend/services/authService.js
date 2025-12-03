@@ -60,7 +60,7 @@ export const loginUser = async (payload) => {
   }).select("+password");
 
   if (!user) {
-    throwHttpError("Invalid credentials", 401);
+    throwHttpError("Invalid Username", 401);
   }
 
   const isMatch = await comparePassword(password, user.password);

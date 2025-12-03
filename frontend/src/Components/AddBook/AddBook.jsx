@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./AddBook.css";
+import "../AdminDashboard/AdminDashboard.css";
 import {
   FaBook,
   FaPlus,
@@ -10,6 +11,7 @@ import {
   FaSignOutAlt,
   FaUpload,
 } from "react-icons/fa";
+import { apiRequest } from "../../api";
 
 const AddBook = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -131,30 +133,54 @@ const AddBook = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus("");
 
-    if (validateForm()) {
-      console.log("Form data:", formData);
-      setSubmitStatus("success");
-
-      // Reset form after successful submission
-      setTimeout(() => {
-        setFormData({
-          title: "",
-          author: "",
-          category: "",
-          isbn: "",
-          year: "",
-          totalCopies: "",
-          imageUrl: "",
-          imageFile: null,
-        });
-        setSubmitStatus("");
-      }, 2000);
-    } else {
+    if (!validateForm()) {
       setSubmitStatus("error");
+      return;
+    }
+
+    try {
+      const payload = {
+        title: formData.title,
+        author: formData.author,
+        category: formData.category,
+        isbn: formData.isbn,
+        year: Number(formData.year),
+        totalCopies: Number(formData.totalCopies),
+        imageUrl: formData.imageUrl || undefined,
+      };
+
+      await apiRequest("/books", {
+        method: "POST",
+        body: payload,
+        auth: true,
+      });
+
+      setSubmitStatus("success");
+      
+      // Reset form after successful submission
+      setFormData({
+        title: "",
+        author: "",
+        category: "",
+        isbn: "",
+        year: "",
+        totalCopies: "",
+        imageUrl: "",
+        imageFile: null,
+      });
+      setErrors({});
+      
+      setTimeout(() => {
+        navigate("/admin/books");
+      }, 2000);
+    } catch (error) {
+      setSubmitStatus("error");
+      console.error("Error adding book:", error);
+      // You could also set a specific error message here if needed
     }
   };
 
@@ -494,7 +520,9 @@ const AddBook = () => {
               <div className={`submit-message ${submitStatus}`}>
                 {submitStatus === "success"
                   ? "✓ Book added successfully!"
-                  : "✗ All fields are required"}
+                  : submitStatus === "error"
+                  ? "✗ Error adding book. Please check all fields and try again."
+                  : ""}
               </div>
             )}
 

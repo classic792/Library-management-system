@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
 import { FaUser, FaLock, FaEnvelope, FaEyeSlash } from "react-icons/fa";
-
+import { apiRequest } from "../../api";
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [action, setAction] = useState("");
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerLastName, setRegisterLastName] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
@@ -52,9 +54,11 @@ const AdminLogin = () => {
     }, 1000);
   };
 
-  const handleRegisterSubmit = (event) => {
+  const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     if (
+      !registerFirstName ||
+      !registerLastName ||
       !registerUsername ||
       !registerEmail ||
       !registerPassword ||
@@ -63,7 +67,10 @@ const AdminLogin = () => {
       setRegisterMessage("Please complete all fields");
       return;
     }
-    if (emailError) return;
+    if (emailError) {
+      setEmailError((prev) => prev || "Enter a valid email address");
+      return;
+    }
     if (registerPassword !== registerConfirmPassword) {
       setRegisterMessage("Passwords do not match");
       return;
@@ -73,8 +80,25 @@ const AdminLogin = () => {
       return;
     }
 
-    setRegisterMessage("Registration successful!");
-    setTimeout(() => setRegisterMessage(""), 3000);
+    try {
+      const response = await apiRequest("/auth/signup", {
+        method: "POST",
+        body: {
+          firstName: registerFirstName,
+          lastName: registerLastName,
+          alias: registerUsername,
+          email: registerEmail,
+          password: registerPassword,
+          confirmPassword: registerConfirmPassword,
+          role: "admin",
+        },
+      });
+      localStorage.setItem("adminToken", response.token);
+      setRegisterMessage("Registration successful!");
+      navigate("/admin/dashboard");
+    } catch (error) {
+      setRegisterMessage(error.message);
+    }
   };
 
   return (
@@ -145,12 +169,24 @@ const AdminLogin = () => {
           <h1>Admin Registration</h1>
 
           <div className="input-box">
-            <input type="text" placeholder="First Name" required />
+            <input
+              type="text"
+              placeholder="First Name"
+              required
+              value={registerFirstName}
+              onChange={(e) => setRegisterFirstName(e.target.value)}
+            />
             <FaUser className="icon" />
           </div>
 
           <div className="input-box">
-            <input type="text" placeholder="Last Name" required />
+            <input
+              type="text"
+              placeholder="Last Name"
+              required
+              value={registerLastName}
+              onChange={(e) => setRegisterLastName(e.target.value)}
+            />
             <FaUser className="icon" />
           </div>
 
