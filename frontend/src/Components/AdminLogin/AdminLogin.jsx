@@ -45,7 +45,6 @@ const AdminLogin = () => {
       setLoginMessage("Fill in username and password");
       return;
     }
-
     // Mock successful login
     setLoginMessage("Login successful!");
     setTimeout(() => {

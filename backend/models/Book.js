@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+const counterSchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true },
+  value: { type: Number, default: 0 },
+});
+
+const Counter = mongoose.model("Counter", counterSchema);
+
 const bookSchema = new mongoose.Schema(
   {
     title: {
@@ -19,7 +26,7 @@ const bookSchema = new mongoose.Schema(
     },
     isbn: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
       trim: true,
     },
@@ -47,6 +54,25 @@ const bookSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+bookSchema.pre("save", async function (next) {
+  try {
+    if (this.isNew) {
+      const counter = await Counter.findOneAndUpdate(
+        { key: "bookId" },
+        { $inc: { value: 1 } },
+        { new: true, upsert: true }
+      );
+      const baseNumber = 9780000000000;
+      const isbnNumber = baseNumber + counter.value;
+      this.isbn = isbnNumber.toString();
+    }
+    next();
+  } catch (error) {
+    next(error);
+    console.log(error.message);
+  }
+});
 
 bookSchema.pre("save", function normalizeCopies(next) {
   if (this.availableCopies == null) {

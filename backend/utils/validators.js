@@ -22,7 +22,7 @@ export const bookCreateSchema = Joi.object({
   title: Joi.string().trim().required(),
   author: Joi.string().trim().required(),
   category: Joi.string().trim().required(),
-  isbn: Joi.string().trim().required(),
+  isbn: Joi.string().trim(),
   year: Joi.number().integer().min(0).required(),
   totalCopies: Joi.number().integer().min(0).required(),
   availableCopies: Joi.number().integer().min(0),

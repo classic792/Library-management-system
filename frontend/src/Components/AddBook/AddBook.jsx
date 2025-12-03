@@ -160,7 +160,7 @@ const AddBook = () => {
       });
 
       setSubmitStatus("success");
-      
+
       // Reset form after successful submission
       setFormData({
         title: "",
@@ -173,7 +173,7 @@ const AddBook = () => {
         imageFile: null,
       });
       setErrors({});
-      
+
       setTimeout(() => {
         navigate("/admin/books");
       }, 2000);
@@ -371,24 +371,6 @@ const AddBook = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="isbn">ISBN *</label>
-                <input
-                  type="text"
-                  id="isbn"
-                  name="isbn"
-                  value={formData.isbn}
-                  onChange={handleChange}
-                  className={errors.isbn ? "error" : ""}
-                  placeholder="Enter ISBN number"
-                />
-                {errors.isbn && (
-                  <span className="error-message">{errors.isbn}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
                 <label htmlFor="year">Year *</label>
                 <input
                   type="number"
@@ -405,7 +387,9 @@ const AddBook = () => {
                   <span className="error-message">{errors.year}</span>
                 )}
               </div>
+            </div>
 
+            <div className="form-row">
               <div className="form-group">
                 <label htmlFor="totalCopies">Total Copies *</label>
                 <input
@@ -415,11 +399,30 @@ const AddBook = () => {
                   value={formData.totalCopies}
                   onChange={handleChange}
                   className={errors.totalCopies ? "error" : ""}
-                  placeholder="Enter number of copies"
+                  placeholder="Enter number total of copies"
                   min="1"
                 />
                 {errors.totalCopies && (
                   <span className="error-message">{errors.totalCopies}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="availableCopies">Available Copies *</label>
+                <input
+                  type="number"
+                  id="availableCopies"
+                  name="availableCopies"
+                  value={formData.availableCopies}
+                  onChange={handleChange}
+                  className={errors.availableCopies ? "error" : ""}
+                  placeholder="Enter number available of copies"
+                  min="1"
+                />
+                {errors.availableCopies && (
+                  <span className="error-message">
+                    {errors.availableCopies}
+                  </span>
                 )}
               </div>
             </div>
