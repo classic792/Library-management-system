@@ -286,7 +286,7 @@ const AdminLogin = () => {
           <button
             type="submit"
             disabled={
-              !emailError ||
+              !!emailError ||
               !termsChecked ||
               !registerUsername ||
               !registerEmail ||

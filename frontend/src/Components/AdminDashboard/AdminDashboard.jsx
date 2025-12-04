@@ -70,6 +70,7 @@ const AdminDashboard = () => {
     { name: "Biography", value: 0, color: "#9b59b6", percentage: 0 },
     { name: "Children", value: 0, color: "#34495e", percentage: 0 },
     { name: "Romance", value: 0, color: "#ff3e5b", percentage: 0 },
+    { name: "Psychology", value: 0, color: "#f1c40f", percentage: 0 },
   ];
 
   // Data for Books Added Over Time
