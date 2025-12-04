@@ -93,9 +93,9 @@ const AddBook = () => {
     if (!formData.category.trim()) {
       newErrors.category = "Category is required";
     }
-    if (!formData.isbn.trim()) {
-      newErrors.isbn = "ISBN is required";
-    }
+    // if (!formData.isbn.trim()) {
+    //   newErrors.isbn = "ISBN is required";
+    // }
     if (!formData.year.trim()) {
       newErrors.year = "Year is required";
     } else if (
@@ -112,6 +112,14 @@ const AddBook = () => {
       parseInt(formData.totalCopies) < 1
     ) {
       newErrors.totalCopies = "Please enter a valid number (at least 1)";
+    }
+    if (!formData.availableCopies.trim()) {
+      newErrors.availableCopies = "Available copies is required";
+    } else if (
+      isNaN(formData.availableCopies) ||
+      parseInt(formData.availableCopies) < 1
+    ) {
+      newErrors.availableCopies = "Please enter a valid number (at least 1)";
     }
 
     // Image validation based on upload method
@@ -143,14 +151,34 @@ const AddBook = () => {
     }
 
     try {
+      let finalImageUrl = formData.imageUrl;
+
+      // If file upload is selected → upload to Cloudinary
+      if (uploadMethod === "file" && formData.imageFile) {
+        const data = new FormData();
+        data.append("file", formData.imageFile);
+        data.append("upload_preset", "library_books"); // ← create preset in Cloudinary
+
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/db7nlurwe/image/upload",
+          {
+            method: "POST",
+            body: data,
+          }
+        );
+
+        const cloudData = await res.json();
+        finalImageUrl = cloudData.secure_url;
+      }
+
       const payload = {
         title: formData.title,
         author: formData.author,
         category: formData.category,
-        isbn: formData.isbn,
         year: Number(formData.year),
         totalCopies: Number(formData.totalCopies),
-        imageUrl: formData.imageUrl || undefined,
+        availableCopies: Number(formData.availableCopies),
+        imageUrl: finalImageUrl || undefined,
       };
 
       await apiRequest("/books", {
@@ -169,6 +197,7 @@ const AddBook = () => {
         isbn: "",
         year: "",
         totalCopies: "",
+        availableCopies: "",
         imageUrl: "",
         imageFile: null,
       });
@@ -493,7 +522,7 @@ const AddBook = () => {
                     onChange={handleFileChange}
                     className={errors.imageUrl ? "error" : ""}
                   />
-                  <p className="upload-hint">Accepts: JPG, PNG, WEBP</p>
+                  <p className="upload-hint">Accepts: JPG, PNG, WEBP,JPEG</p>
                 </div>
               )}
 
@@ -544,6 +573,7 @@ const AddBook = () => {
                     isbn: "",
                     year: "",
                     totalCopies: "",
+                    availableCopies: "",
                     imageUrl: "",
                     imageFile: null,
                   });

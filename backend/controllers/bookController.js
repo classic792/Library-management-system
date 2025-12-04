@@ -23,6 +23,7 @@ export const createBookController = async (req, res) => {
       data: book,
     });
   } catch (error) {
+    console.log(error.message);
     return respondWithError(res, error, "Unable to create book");
   }
 };
@@ -53,7 +54,10 @@ export const getBookController = async (req, res) => {
 
 export const updateBookController = async (req, res) => {
   try {
-    const book = await updateBookById(req.validatedParams.bookId, req.validatedData);
+    const book = await updateBookById(
+      req.validatedParams.bookId,
+      req.validatedData
+    );
     return res.status(200).json({
       message: "Book updated successfully",
       data: book,
@@ -78,7 +82,11 @@ export const borrowBookController = async (req, res) => {
   try {
     const userId = req.user.id;
     const { dueDateDays } = req.validatedData || {};
-    const borrow = await createBorrow(userId, req.validatedParams.bookId, dueDateDays);
+    const borrow = await createBorrow(
+      userId,
+      req.validatedParams.bookId,
+      dueDateDays
+    );
     return res.status(201).json({
       message: "Book borrowed successfully",
       data: borrow,
@@ -92,7 +100,12 @@ export const returnBookController = async (req, res) => {
   try {
     const userId = req.user.id;
     const { condition, fine } = req.validatedData || {};
-    const returnRecord = await createReturn(userId, req.validatedParams.bookId, condition, fine);
+    const returnRecord = await createReturn(
+      userId,
+      req.validatedParams.bookId,
+      condition,
+      fine
+    );
     return res.status(201).json({
       message: "Book returned successfully",
       data: returnRecord,

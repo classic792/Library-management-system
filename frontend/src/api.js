@@ -24,7 +24,7 @@ export async function apiRequest(
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.message || "Request failed");
+    throw new Error(data.message || "Invalid credentials");
   }
   return data;
 }

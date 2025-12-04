@@ -39,18 +39,35 @@ const AdminLogin = () => {
     else setEmailError("");
   };
 
-  const handleLoginSubmit = (event) => {
+  const handleLoginSubmit = async (event) => {
     event.preventDefault();
     if (!loginUsername || !loginPassword) {
       setLoginMessage("Fill in username and password");
       return;
     }
-    // Mock successful login
-    setLoginMessage("Login successful!");
-    setTimeout(() => {
-      setLoginMessage("");
-      navigate("/admin/dashboard"); // Navigate to AdminDashboard
-    }, 1000);
+    try {
+      const response = await apiRequest("/auth/login", {
+        method: "POST",
+        body: {
+          identifier: loginUsername,
+          password: loginPassword,
+        },
+      });
+      // Check if admin
+      if (response?.user?.role !== "admin") {
+        setLoginMessage("You are not authorized as admin");
+        return;
+      }
+      // Save token
+      localStorage.setItem("adminToken", response.token);
+      setLoginMessage("Login successful!");
+      setTimeout(() => {
+        navigate("/admin/dashboard");
+      }, 1000);
+    } catch (error) {
+      console.log("error in login:", error);
+      setLoginMessage(error.message || "Login failed");
+    }
   };
 
   const handleRegisterSubmit = async (event) => {
@@ -269,7 +286,7 @@ const AdminLogin = () => {
           <button
             type="submit"
             disabled={
-              !!emailError ||
+              !emailError ||
               !termsChecked ||
               !registerUsername ||
               !registerEmail ||

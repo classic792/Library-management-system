@@ -65,7 +65,7 @@ export const loginUser = async (payload) => {
 
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throwHttpError("Password mismatch", 401);
+    throwHttpError("Invalid Password", 401);
   }
 
   const token = generateToken(user._id, user.role);

@@ -20,13 +20,27 @@ function App() {
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="admin">
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
-        <Route path="/admin/books" element={<Books />} />
-        <Route path="/admin/add-book" element={<AddBook />} />
+        <Route
+          path="/admin/books"
+          element={
+            <ProtectedRoute role="admin">
+              <Books />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/add-book"
+          element={
+            <ProtectedRoute role="admin">
+              <AddBook />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/user/dashboard"
           element={

@@ -10,11 +10,15 @@ import {
   FaTh,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { apiRequest } from "../../api";
 
 const Books = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -38,6 +42,19 @@ const Books = () => {
     document.body.style.backgroundImage = "none";
     document.body.style.overflow = "auto";
     document.body.style.display = "block";
+
+    const loadBooks = async () => {
+      try {
+        setLoading(true);
+        const data = await apiRequest("/books", { auth: true });
+        setBooks(data.data || data); // depends on how you shaped controller; you returned { message, data }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBooks();
 
     return () => {
       document.body.classList.remove("dashboard-active");
@@ -159,6 +176,30 @@ const Books = () => {
             This page will display all books in your library. You'll be able to
             view, search, edit, and manage books here.
           </p>
+          {loading && <p>Loading books...</p>}
+          {error && <p className="error">{error}</p>}
+
+          <div className="books-grid">
+            {books.length === 0 && !loading && <p>No books found.</p>}
+
+            {books.map((book) => (
+              <div key={book._id} className="book-card">
+                <img
+                  src={book.imageUrl || "/placeholder-book.png"}
+                  alt={book.title}
+                  className="book-cover"
+                />
+
+                <h3>{book.title}</h3>
+                <p>Author: {book.author}</p>
+                <p>ISBN: {book.isbn}</p>
+
+                <Link to={`/admin/books/${book._id}`} className="btn">
+                  View Details
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>
