@@ -24,6 +24,15 @@ const bookSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    description: {
+      type: String,
+      default: "",
+    },
+    condition: {
+      type: String,
+      enum: ["New", "Good", "Fair", "Worn", "Damaged"],
+      default: "Good",
+    },
     isbn: {
       type: String,
       unique: true,
@@ -54,24 +63,44 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
-bookSchema.pre("save", async function (next) {
-  try {
-    if (this.isNew) {
-      const counter = await Counter.findOneAndUpdate(
-        { key: "bookId" },
-        { $inc: { value: 1 } },
-        { new: true, upsert: true }
-      );
-      const baseNumber = 9780000000000;
-      const isbnNumber = baseNumber + counter.value;
-      this.isbn = isbnNumber.toString();
+borrowingHistory: [
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    borrowedAt: Date,
+    dueAt: Date,
+    returnedAt: Date,
+    returnCondition: {
+      type: String,
+      enum: ["Good", "Fair", "Damaged"],
+    },
+    status: {
+      type: String,
+      enum: ["borrowed", "returned", "overdue"],
+    },
+  },
+],
+
+  bookSchema.pre("save", async function (next) {
+    try {
+      if (this.isNew) {
+        const counter = await Counter.findOneAndUpdate(
+          { key: "bookId" },
+          { $inc: { value: 1 } },
+          { new: true, upsert: true }
+        );
+        const baseNumber = 9780000000000;
+        const isbnNumber = baseNumber + counter.value;
+        this.isbn = isbnNumber.toString();
+      }
+      next();
+    } catch (error) {
+      next(error);
+      console.log(error.message);
     }
-    next();
-  } catch (error) {
-    next(error);
-    console.log(error.message);
-  }
-});
+  });
 
 bookSchema.pre("save", function normalizeCopies(next) {
   if (this.availableCopies == null) {

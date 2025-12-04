@@ -193,6 +193,8 @@ const Books = () => {
                 <h3>{book.title}</h3>
                 <p>Author: {book.author}</p>
                 <p>ISBN: {book.isbn}</p>
+                <p>Category: {book.category}</p>
+                <p>Available: {book.available ? "Yes" : "No"}</p>
 
                 <Link to={`/admin/books/${book._id}`} className="btn">
                   View Details

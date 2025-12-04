@@ -9,6 +9,7 @@ import UserDashboard from "./Components/userDashboard/userDashboard";
 import AvailableBooks from "./Components/availableBooks/availableBooks";
 import BorrowHistory from "./Components/borrowHistory/history";
 import ProtectedRoute from "./protectedRoute";
+import BookDetails from "./Components/bookDetails/bookDetails";
 
 function App() {
   return (
@@ -38,6 +39,14 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <AddBook />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/books/:bookId"
+          element={
+            <ProtectedRoute>
+              <BookDetails />
             </ProtectedRoute>
           }
         />

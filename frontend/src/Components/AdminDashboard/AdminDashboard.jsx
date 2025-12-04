@@ -29,7 +29,6 @@ const AdminDashboard = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("userToken");
     sessionStorage.clear();
-
     // Redirect to landing page
     navigate("/");
   };
@@ -298,7 +297,9 @@ const AdminDashboard = () => {
                       <div
                         className="chart-bar"
                         style={{
-                          width: `${(status.count / Math.max(maxStatusCount, 1)) * 100}%`,
+                          width: `${
+                            (status.count / Math.max(maxStatusCount, 1)) * 100
+                          }%`,
                           backgroundColor: status.color,
                         }}>
                         <span className="chart-bar-value">{status.count}</span>
