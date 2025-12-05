@@ -19,6 +19,7 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -170,37 +171,58 @@ const Books = () => {
           <p className="books-subtitle">Manage your library books</p>
         </div>
 
+        <div className="books-toolbar">
+          <input
+            type="text"
+            placeholder="Search by title, author, or ISBN..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
         <div className="books-section">
-          <h2 className="books-section-title">Books Page</h2>
-          <p className="books-section-text">
-            This page will display all books in your library. You'll be able to
-            view, search, edit, and manage books here.
-          </p>
           {loading && <p>Loading books...</p>}
           {error && <p className="error">{error}</p>}
 
           <div className="books-grid">
-            {books.length === 0 && !loading && <p>No books found.</p>}
+            {books
+              .filter(
+                (book) =>
+                  book.title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                  book.author
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                  book.isbn.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((book) => (
+                <div key={book._id} className="book-card">
+                  <img
+                    src={book.imageUrl || "/placeholder-book.png"}
+                    alt={book.title}
+                    className="book-cover"
+                  />
 
-            {books.map((book) => (
-              <div key={book._id} className="book-card">
-                <img
-                  src={book.imageUrl || "/placeholder-book.png"}
-                  alt={book.title}
-                  className="book-cover"
-                />
+                  <h3>{book.title}</h3>
+                  <p>Author: {book.author}</p>
+                  <p>ISBN: {book.isbn}</p>
+                  <p>Category: {book.category}</p>
+                  <p>Available: {book.available ? "Yes" : "No"}</p>
 
-                <h3>{book.title}</h3>
-                <p>Author: {book.author}</p>
-                <p>ISBN: {book.isbn}</p>
-                <p>Category: {book.category}</p>
-                <p>Available: {book.available ? "Yes" : "No"}</p>
-
-                <Link to={`/admin/books/${book._id}`} className="btn">
-                  View Details
-                </Link>
-              </div>
-            ))}
+                  <div className="book-card-buttons">
+                    <Link to={`/admin/books/${book._id}`} className="btn">
+                      View Details
+                    </Link>
+                    <Link
+                      to={`/admin/edit-book/${book._id}`}
+                      className="btn btn-edit">
+                      Edit
+                    </Link>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </main>

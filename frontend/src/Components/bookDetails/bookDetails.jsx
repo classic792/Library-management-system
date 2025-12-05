@@ -125,13 +125,13 @@ const BookDetails = () => {
         </button>
       </header>
 
-      {/* <div className="details-header">
-        <Link to="/admin/books" className="back-btn">
-          ← Back to Books
-        </Link>
-        <h1>{book.title}</h1>
-      </div> */}
       <div className="content-wrapper">
+        <div className="details-header">
+          <Link to="/admin/books" className="back-btn">
+            ← Back to Books
+          </Link>
+          <h1>{book.title}</h1>
+        </div>
         <main className="details-main">
           <div className="details-container">
             {/* LEFT SIDE — BOOK COVER */}
@@ -142,45 +142,46 @@ const BookDetails = () => {
             {/* RIGHT SIDE — BOOK INFORMATION */}
             <div className="details-info">
               <h2>Book Information</h2>
+              <div className="info-grid">
+                <p>
+                  <strong>Author:</strong> {book.author}
+                </p>
+                <p>
+                  <strong>Category:</strong> {book.category}
+                </p>
+                <p>
+                  <strong>Year:</strong> {book.year}
+                </p>
+                <p>
+                  <strong>ISBN:</strong> {book.isbn}
+                </p>
+                <p>
+                  <strong>Condition:</strong> {book.condition}
+                </p>
+                <p>
+                  <strong>Date Uploaded:</strong>{" "}
+                  {new Date(book.createdAt).toLocaleDateString()}
+                </p>
+              </div>
 
-              <p>
-                <strong>Author:</strong> {book.author}
-              </p>
-              <p>
-                <strong>Category:</strong> {book.category}
-              </p>
-              <p>
-                <strong>Year:</strong> {book.year}
-              </p>
-              <p>
-                <strong>ISBN:</strong> {book.isbn}
-              </p>
-
-              <p>
-                <strong>Description:</strong>{" "}
+              <h3>Description</h3>
+              <p className="description">
                 {book.description || "No description available."}
               </p>
 
-              <p>
-                <strong>Condition:</strong> {book.condition}
-              </p>
-
-              <p>
-                <strong>Date Uploaded:</strong>{" "}
-                {new Date(book.createdAt).toLocaleDateString()}
-              </p>
-
               <h3>Availability</h3>
-              <p>
-                <strong>Total Copies:</strong> {book.totalCopies}
-              </p>
-              <p>
-                <strong>Available Copies:</strong> {book.availableCopies}
-              </p>
-              <p>
-                <strong>Borrowed Copies:</strong>{" "}
-                {book.totalCopies - book.availableCopies}
-              </p>
+              <div className="availability-grid">
+                <p>
+                  <strong>Total Copies:</strong> {book.totalCopies}
+                </p>
+                <p>
+                  <strong>Available Copies:</strong> {book.availableCopies}
+                </p>
+                <p>
+                  <strong>Borrowed Copies:</strong>{" "}
+                  {book.totalCopies - book.availableCopies}
+                </p>
+              </div>
             </div>
           </div>
 

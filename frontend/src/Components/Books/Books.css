@@ -120,6 +120,19 @@
   font-weight: 400;
 }
 
+.books-toolbar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
 /* Books Section */
 .books-section {
   background-color: #f5f4f1;
@@ -153,6 +166,25 @@
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.book-card-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn {
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #fdd526;
+  text-align: center;
+}
+
+.btn-edit {
+  background-color: black;
 }
 
 .book-cover {
