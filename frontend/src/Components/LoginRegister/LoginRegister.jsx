@@ -119,7 +119,7 @@ const LoginRegister = () => {
     <div className={`wrapper${action}`}>
       <div className="form-box login">
         <form onSubmit={handleLoginSubmit} noValidate>
-          <h1>Login</h1>
+          <h1>User Login</h1>
           <div className="user-input-box">
             <input
               type="text"
@@ -176,7 +176,7 @@ const LoginRegister = () => {
 
       <div className="form-box register">
         <form onSubmit={handleRegisterSubmit} noValidate>
-          <h1>Registration</h1>
+          <h1>User Registration</h1>
           <div className="user-input-box">
             <input
               type="text"
