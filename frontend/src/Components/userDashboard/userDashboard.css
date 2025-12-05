@@ -45,7 +45,7 @@
 .logo-text {
   font-size: 22px;
   font-weight: 700;
-  color: #333;
+  color: #fdd526;
 }
 
 /* Nav */
@@ -122,13 +122,13 @@
   gap: 10px;
   font-size: 16px;
   text-decoration: none;
-  color: #cbeb17;
+  color: black;
   border-bottom: 1px solid #eee;
 }
 
 .mobile-nav-item.active {
   background: #ffefe6;
-  color: #ff6b35;
+  color: #fdd526;
 }
 
 /* Main */

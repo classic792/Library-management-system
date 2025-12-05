@@ -74,7 +74,7 @@ const AvailableBooks = () => {
             <div className="logo-line logo-line-2"></div>
             <div className="logo-line logo-line-3"></div>
           </div>
-          <span className="logo-text">LibraSystem</span>
+          <span className="logo-text">GoldenIndex</span>
         </Link>
 
         <nav className="dashboard-nav">
