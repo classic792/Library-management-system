@@ -1,0 +1,64 @@
+body.no-scroll {
+  overflow: hidden;
+}
+
+.terms-conditions-container {
+  max-width: 600px;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #1a1a1a;
+}
+
+.terms-content h2 {
+  font-size: 22px;
+  color: #1a1a1a;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 8px;
+}
+
+.terms-content {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 15px;
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.terms-content p {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.back-button {
+  display: block;
+  width: fit-content;
+  margin: 30px auto 0;
+  padding: 12px 25px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #555;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./AdminLogin.css";
 import { FaUser, FaLock, FaEnvelope, FaEyeSlash } from "react-icons/fa";
 import { apiRequest } from "../../api";
@@ -156,7 +156,7 @@ const AdminLogin = () => {
               <input type="checkbox" />
               Remember me
             </label>
-            <a href="#">Forgot password?</a>
+            <Link to="/forgotPassword">Forgot password?</Link>
           </div>
 
           <button type="submit" disabled={!loginUsername || !loginPassword}>
@@ -279,7 +279,7 @@ const AdminLogin = () => {
                 checked={termsChecked}
                 onChange={(e) => setTermsChecked(e.target.checked)}
               />
-              I agree to the terms & conditions
+              I agree to the <Link to="/termsConditions">terms & conditions</Link>
             </label>
           </div>
 

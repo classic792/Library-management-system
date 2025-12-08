@@ -24,17 +24,23 @@ const userSchema = new mongoose.Schema(
     },
     alias: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
       trim: true,
       lowercase: true,
       minlength: 2,
+      sparse: true,
     },
     password: {
       type: String,
-      required: true,
+      required: false,
       minlength: 8,
       select: false,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
     },
     role: {
       type: String,

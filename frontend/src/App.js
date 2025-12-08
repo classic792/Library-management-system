@@ -10,6 +10,7 @@ import AvailableBooks from "./Components/availableBooks/availableBooks";
 import BorrowHistory from "./Components/borrowHistory/history";
 import ProtectedRoute from "./protectedRoute";
 import BookDetails from "./Components/bookDetails/bookDetails";
+import TermsConditions from "./Components/termsConditions/termsConditions";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/termsConditions" element={<TermsConditions />} />
         <Route
           path="/admin/dashboard"
           element={

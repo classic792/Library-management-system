@@ -1,4 +1,5 @@
 import { registerUser, loginUser } from "../services/authService.js";
+import { googleLogin } from "../services/googleAuthService.js";
 import { signupSchema, loginSchema } from "../utils/validators.js";
 
 const formatValidationErrors = (details) =>
@@ -53,5 +54,18 @@ export const login = async (req, res) => {
       // message: err.message || "Unable to login",
     });
     
+  }
+};
+
+export const googleCallback = async (req, res) => {
+  try {
+    const { token, user } = await googleLogin(req.user);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.redirect(`${process.env.CLIENT_URL}/user/dashboard`);
+  } catch (err) {
+    res.redirect(`${process.env.CLIENT_URL}/login`);
   }
 };
