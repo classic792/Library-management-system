@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [statusData, setStatusData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -79,6 +80,7 @@ const AdminDashboard = () => {
           { status: "Overdue", count: data.overdueBooks, color: "#e74c3c" },
         ]);
 
+        setRecentActivity(data.recentActivity);
         // Example: category distribution from backend (if you add it later)
         setCategoryData(data.categoryDistribution);
         setMonthlyData(data.monthlyData);
@@ -336,6 +338,37 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          <div className="recent-activity-card">
+            <h2 className="recent-title">Recent Activity</h2>
+
+            <div className="activity-list">
+              {recentActivity.length === 0 ? (
+                <p className="no-activity">No recent activity</p>
+              ) : (
+                recentActivity.map((item, i) => (
+                  <div key={i} className="activity-item">
+                    <div className="activity-info">
+                      <p className="activity-book">
+                        <strong>{item.book?.title || "Unknown Book"}</strong>
+                      </p>
+                      <p className="activity-user">
+                        by {item.user?.alias || "Unknown User"}
+                      </p>
+                    </div>
+
+                    <div className={`activity-status status-${item.status}`}>
+                      {item.status}
+                    </div>
+
+                    <div className="activity-date">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

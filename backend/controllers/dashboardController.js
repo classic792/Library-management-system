@@ -22,7 +22,7 @@ export const getAdminStatsController = async (req, res) => {
     const recentActivity = await Borrow.find()
       .populate("book user")
       .sort({ createdAt: -1 })
-      .limit(5);
+      .limit(4);
 
     // CATEGORY DISTRIBUTION
     const categoryAgg = await Book.aggregate([
