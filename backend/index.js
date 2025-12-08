@@ -10,6 +10,7 @@ import bookRoutes from "./routes/bookRoutes.js";
 import borrowRoutes from "./routes/borrowRoutes.js";
 import returnRoutes from "./routes/returnRoutes.js";
 import searchRoutes from "./routes/searchRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/borrows", borrowRoutes);
 app.use("/api/returns", returnRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/admin", dashboardRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

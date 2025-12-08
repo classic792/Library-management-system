@@ -11,13 +11,26 @@ import {
   FaBars,
   FaTimes,
   FaSignOutAlt,
+  FaFileInvoice,
+  FaUserShield,
 } from "react-icons/fa";
-
+import { apiRequest } from "../../api";
 const AdminDashboard = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [statusData, setStatusData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [stats, setStats] = useState({
+    totalBooks: 0,
+    available: 0,
+    borrowed: 0,
+    totalCopies: 0,
+    totalMembers: 0,
+    totalAdmins: 0,
+  });
   // Check if a route is active
   const isActive = (path) => {
     return location.pathname === path;
@@ -36,12 +49,57 @@ const AdminDashboard = () => {
   // Remove background image when component mounts
   useEffect(() => {
     document.body.classList.add("dashboard-active");
-
     // Remove background image and set to white
     document.body.style.background = "white";
     document.body.style.backgroundImage = "none";
     document.body.style.overflow = "auto";
     document.body.style.display = "block";
+
+    const fetchDashboard = async () => {
+      try {
+        const response = await apiRequest("/admin/stats", { auth: true });
+        const data = response.data;
+
+        // Compute available (total copies - borrowed)
+        const available = data.totalCopies - data.borrowedBooks;
+
+        setStats({
+          totalBooks: data.totalBooks,
+          available,
+          borrowed: data.borrowedBooks,
+          totalCopies: data.totalCopies,
+          totalMembers: data.totalMembers,
+          totalAdmins: data.totalAdmins,
+        });
+
+        // Status chart
+        setStatusData([
+          { status: "Available", count: available, color: "#50c878" },
+          { status: "Borrowed", count: data.borrowedBooks, color: "#f39c12" },
+          { status: "Overdue", count: data.overdueBooks, color: "#e74c3c" },
+        ]);
+
+        // Example: category distribution from backend (if you add it later)
+        setCategoryData(
+          data.categoryDistribution || [
+            { name: "Fiction", value: 0, color: "#4a90e2", percentage: 0 },
+            { name: "Science", value: 0, color: "#50c878", percentage: 0 },
+            { name: "History", value: 0, color: "#f39c12", percentage: 0 },
+          ]
+        );
+        setMonthlyData(
+          data.monthlyData || [
+            { month: "Jan", books: 0 },
+            { month: "Feb", books: 0 },
+            { month: "Mar", books: 0 },
+          ]
+        );
+      } catch (error) {
+        console.error("Failed to load dashboard", error.message);
+      }
+    };
+
+    fetchDashboard();
 
     return () => {
       document.body.classList.remove("dashboard-active");
@@ -51,50 +109,6 @@ const AdminDashboard = () => {
       document.body.style.display = "";
     };
   }, []);
-
-  // Mock data (will be replaced by API call)
-  const stats = {
-    totalBooks: 0,
-    available: 0,
-    borrowed: 0,
-    totalCopies: 0,
-  };
-
-  // Data for Category Distribution
-  const categoryData = [
-    { name: "Fiction", value: 0, color: "#4a90e2", percentage: 0 },
-    { name: "Science", value: 0, color: "#50c878", percentage: 0 },
-    { name: "History", value: 0, color: "#f39c12", percentage: 0 },
-    { name: "Technology", value: 0, color: "#e74c3c", percentage: 0 },
-    { name: "Biography", value: 0, color: "#9b59b6", percentage: 0 },
-    { name: "Children", value: 0, color: "#34495e", percentage: 0 },
-    { name: "Romance", value: 0, color: "#ff3e5b", percentage: 0 },
-    { name: "Psychology", value: 0, color: "#f1c40f", percentage: 0 },
-  ];
-
-  // Data for Books Added Over Time
-  const monthlyData = [
-    { month: "Jan", books: 0 },
-    { month: "Feb", books: 0 },
-    { month: "Mar", books: 0 },
-    { month: "Apr", books: 0 },
-    { month: "May", books: 0 },
-    { month: "Jun", books: 0 },
-    { month: "Jul", books: 0 },
-    { month: "Aug", books: 0 },
-    { month: "Sep", books: 0 },
-    { month: "Oct", books: 0 },
-    { month: "Nov", books: 0 },
-    { month: "Dec", books: 0 },
-  ];
-
-  // Data for Book Status
-  const statusData = [
-    { status: "Available", count: 0, color: "#50c878" },
-    { status: "Borrowed", count: 0, color: "#f39c12" },
-    { status: "Reserved", count: 0, color: "#4a90e2" },
-    { status: "Overdue", count: 0, color: "#e74c3c" },
-  ];
 
   const maxMonthlyBooks = Math.max(...monthlyData.map((d) => d.books));
   const maxStatusCount = Math.max(...statusData.map((d) => d.count));
@@ -240,7 +254,7 @@ const AdminDashboard = () => {
                 <p className="stat-description">Currently out</p>
               </div>
               <div className="stat-icon-wrapper">
-                <FaUsers className="stat-icon" />
+                <FaFileInvoice className="stat-icon" />
               </div>
             </div>
           </div>
@@ -254,6 +268,32 @@ const AdminDashboard = () => {
               </div>
               <div className="stat-icon-wrapper">
                 <FaChartLine className="stat-icon" />
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-content">
+              <div className="stat-info">
+                <h3 className="stat-title">Total Members</h3>
+                <p className="stat-value">{stats.totalMembers}</p>
+                <p className="stat-description">Active members</p>
+              </div>
+              <div className="stat-icon-wrapper">
+                <FaUsers className="stat-icon" />
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-content">
+              <div className="stat-info">
+                <h3 className="stat-title">Total Admins</h3>
+                <p className="stat-value">{stats.totalAdmins}</p>
+                <p className="stat-description">Administrators</p>
+              </div>
+              <div className="stat-icon-wrapper">
+                <FaUserShield className="stat-icon" />
               </div>
             </div>
           </div>
