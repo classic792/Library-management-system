@@ -19,6 +19,7 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -34,6 +35,10 @@ const Books = () => {
     // Redirect to landing page
     navigate("/");
   };
+
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Remove background image when component mounts
   useEffect(() => {
@@ -176,13 +181,24 @@ const Books = () => {
             This page will display all books in your library. You'll be able to
             view, search, edit, and manage books here.
           </p>
+
+          <div className="admin-search-bar">
+            <input
+              type="text"
+              placeholder="Search books..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+          </div>
+
           {loading && <p>Loading books...</p>}
           {error && <p className="error">{error}</p>}
 
           <div className="books-grid">
             {books.length === 0 && !loading && <p>No books found.</p>}
 
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <div key={book._id} className="book-card">
                 <img
                   src={book.imageUrl || "/placeholder-book.png"}
