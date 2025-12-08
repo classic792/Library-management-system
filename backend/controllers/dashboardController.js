@@ -33,6 +33,7 @@ export const getAdminStatsController = async (req, res) => {
     const categoryDistribution = categoryAgg.map((c) => ({
       name: c._id,
       value: c.count,
+      color: "#" + Math.floor(Math.random() * 16777215).toString(16), // Random color
       percentage: totalBooks > 0 ? Math.round((c.count / totalBooks) * 100) : 0,
     }));
 

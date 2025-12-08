@@ -80,20 +80,8 @@ const AdminDashboard = () => {
         ]);
 
         // Example: category distribution from backend (if you add it later)
-        setCategoryData(
-          data.categoryDistribution || [
-            { name: "Fiction", value: 0, color: "#4a90e2", percentage: 0 },
-            { name: "Science", value: 0, color: "#50c878", percentage: 0 },
-            { name: "History", value: 0, color: "#f39c12", percentage: 0 },
-          ]
-        );
-        setMonthlyData(
-          data.monthlyData || [
-            { month: "Jan", books: 0 },
-            { month: "Feb", books: 0 },
-            { month: "Mar", books: 0 },
-          ]
-        );
+        setCategoryData(data.categoryDistribution);
+        setMonthlyData(data.monthlyData);
       } catch (error) {
         console.error("Failed to load dashboard", error.message);
       }
@@ -115,7 +103,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      {/* Header */}
+      {/* { Header */}
       <header className="dashboard-header">
         <Link
           to="/admin/dashboard"
