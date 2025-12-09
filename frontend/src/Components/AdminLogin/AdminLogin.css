@@ -197,6 +197,34 @@ form .register-link {
     text-align: center;
 }
 
+/* ...existing code... */
+
+.google-login-container {
+  margin-top: 20px;
+  display: inline-block;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.divider {
+  flex: 1;
+  text-align: center;
+  color: black;
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* Adjust Google button width */
+.google-login-container > div {
+  flex: 1;
+}
+
+/* ...existing code... */
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
     .admin-wrapper {

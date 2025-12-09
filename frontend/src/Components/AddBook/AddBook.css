@@ -17,6 +17,7 @@ body.dashboard-active {
 
 /* Header */
 .add-book-header {
+    position: fixed;
     background-color: white;
     width: 100%;
     padding: 20px 40px;
@@ -383,6 +384,7 @@ body.dashboard-active {
     padding: 10px 20px;
     border: 2px solid #ddd;
     background: white;
+    color: black;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -395,14 +397,15 @@ body.dashboard-active {
 }
 
 .toggle-btn:hover {
-    border-color: #e55a2b;
-    background: #e55a2b;
+    border-color: black;
+    background: black;
+    color: white;
 }
 
 .toggle-btn.active {
     border-color: #fdd526;
     background: #fdd526;
-    color: white;
+    color: black;
 }
 
 .upload-section {

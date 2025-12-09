@@ -11,75 +11,85 @@ import BorrowHistory from "./Components/borrowHistory/history";
 import ProtectedRoute from "./protectedRoute";
 import BookDetails from "./Components/bookDetails/bookDetails";
 import TermsConditions from "./Components/termsConditions/termsConditions";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginRegister />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/termsConditions" element={<TermsConditions />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/books"
-          element={
-            <ProtectedRoute role="admin">
-              <Books />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/add-book"
-          element={
-            <ProtectedRoute role="admin">
-              <AddBook />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/books/:bookId"
-          element={
-            <ProtectedRoute>
-              <BookDetails />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/dashboard"
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/available-books"
-          element={
-            <ProtectedRoute>
-              <AvailableBooks />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/borrow-history"
-          element={
-            <ProtectedRoute>
-              <BorrowHistory />
-            </ProtectedRoute>
-          }
-        />
-        {/* Add more routes as needed */}
-      </Routes>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId="539913785512-i7g4q7s3t6568e74sc6ji5mqp00hnh2j.apps.googleusercontent.com">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginRegister />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/termsConditions" element={<TermsConditions />} />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/books"
+            element={
+              <ProtectedRoute role="admin">
+                <Books />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/add-book"
+            element={
+              <ProtectedRoute role="admin">
+                <AddBook />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/books/:bookId"
+            element={
+              <ProtectedRoute>
+                <BookDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/dashboard"
+            element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/available-books"
+            element={
+              <ProtectedRoute>
+                <AvailableBooks />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/borrow-history"
+            element={
+              <ProtectedRoute>
+                <BorrowHistory />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 
 export default App;
+

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "./LoginRegister.css";
 import { FaUser, FaLock, FaEnvelope, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginRegister = () => {
   const navigate = useNavigate();
@@ -67,6 +68,50 @@ const LoginRegister = () => {
       setLoginMessage(error.message);
       // setTimeout(() => setLoginMessage(""), 3000);
     }
+  };
+  
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const response = await apiRequest("/auth/google-login", {
+        method: "POST",
+        body: { token: credentialResponse.credential },
+      });
+
+      localStorage.setItem("userToken", response.token);
+      setLoginMessage("Google login successful!");
+      setTimeout(() => {
+        navigate("/user/dashboard");
+      }, 1000);
+    } catch (error) {
+      console.log("Google login error:", error);
+      setLoginMessage(error.message || "Google login failed");
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    setLoginMessage("Google login failed");
+  };
+
+  const handleGoogleRegisterSuccess = async (credentialResponse) => {
+    try {
+      const response = await apiRequest("/auth/google-signup", {
+        method: "POST",
+        body: { token: credentialResponse.credential },
+      });
+
+      localStorage.setItem("userToken", response.token);
+      setRegisterMessage("Google registration successful!");
+      setTimeout(() => {
+        navigate("/user/dashboard");
+      }, 1000);
+    } catch (error) {
+      console.log("Google registration error:", error);
+      setRegisterMessage(error.message || "Google registration failed");
+    }
+  };
+
+  const handleGoogleRegisterError = () => {
+    setRegisterMessage("Google registration failed");
   };
 
   const handleRegisterSubmit = async (event) => {
@@ -157,6 +202,18 @@ const LoginRegister = () => {
           <button type="submit" disabled={!loginUsername || !loginPassword}>
             Login
           </button>
+
+          <div className="google-login-container">
+            <p className="divider">or</p>
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginError}
+              theme="outline"
+              size="large"
+              width="100%"
+            />
+          </div>
+
           {loginMessage && (
             <p className="feedback-msg" aria-live="polite">
               {loginMessage}
@@ -286,6 +343,18 @@ const LoginRegister = () => {
             }>
             Register
           </button>
+
+          <div className="google-login-container">
+            <p className="divider">or</p>
+            <GoogleLogin
+              onSuccess={handleGoogleRegisterSuccess}
+              onError={handleGoogleRegisterError}
+              theme="outline"
+              size="large"
+              width="100%"
+            />
+          </div>
+
           {registerMessage && (
             <p className="feedback-msg" aria-live="polite">
               {registerMessage}

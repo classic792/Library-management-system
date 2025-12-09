@@ -12,6 +12,7 @@
   width: 100%;
   max-width: 1200px; /* Max width for larger screens */
   margin: 20px auto; /* Centered with margin */
+  margin-top: 5rem;
   padding: 20px;
   box-sizing: border-box;
 }
