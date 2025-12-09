@@ -22,10 +22,19 @@ export async function apiRequest(
     credentials: "include",
   });
 
-  const data = await res.json().catch(() => ({}));
+  // try to read JSON, fall back to text
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    data = { __raw: await res.text() };
+  }
+
   if (!res.ok) {
-    const err = new Error(data.message || "Request failed");
-    err.status = res.status; // <-- add status
+    const message = data?.message || data?.error || data?.__raw || `HTTP ${res.status}`;
+    const err = new Error(message);
+    err.status = res.status;
+    err.response = data;
     throw err;
   }
   return data;

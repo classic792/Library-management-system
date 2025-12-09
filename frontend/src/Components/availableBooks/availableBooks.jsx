@@ -1,6 +1,7 @@
 import "./availableBooks.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { apiRequest } from "../../api";
 import "../userDashboard/userDashboard.css";
 import {
   FaBook,
@@ -36,46 +37,71 @@ const AvailableBooks = () => {
     };
   }, []);
 
-  // TODO: Replace this mock data with data loaded from the backend.
-  const books = [
-    {
-      id: 1,
-      title: "Atomic Habits",
-      author: "James Clear",
-      isbn: "9780735211292",
-      category: "Self-help",
-      available: true,
-    },
-    {
-      id: 2,
-      title: "Clean Code",
-      author: "Robert C. Martin",
-      isbn: "9780132350884",
-      category: "Programming",
-      available: false,
-    },
-    {
-      id: 3,
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      isbn: "9781612680194",
-      category: "Finance",
-      available: true,
-    },
-  ];
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchAvailableBooks = async () => {
+    setLoading(true);
+    try {
+      console.log("fetchAvailableBooks: requesting /books?available=true");
+      let res = await apiRequest("/books?available=true", { auth: true });
+      console.log("available books response:", res);
+
+      // normalize response — check for .data, .books, or Array
+      let items = Array.isArray(res)
+        ? res
+        : res?.data ?? res?.books ?? [];
+
+      // fallback: try generic /books if none found
+      if (!items.length) {
+        console.warn("No items from /books?available=true, trying /books");
+        const fallback = await apiRequest("/books", { auth: true }).catch((e) => {
+          console.warn("fallback /books failed:", e);
+          return null;
+        });
+        console.log("fallback response:", fallback);
+        items = Array.isArray(fallback)
+          ? fallback
+          : fallback?.data ?? fallback?.books ?? [];
+      }
+
+      setBooks(items);
+      setError("");
+    } catch (err) {
+      console.error("fetchAvailableBooks error:", err, "response:", err?.response);
+      setError(err.message || "Failed to fetch available books");
+      if (err.status === 401) navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableBooks();
+  }, []);
 
   const filteredBooks = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return books;
 
     return books.filter((book) => {
-      const inTitle = book.title.toLowerCase().includes(term);
-      const inAuthor = book.author.toLowerCase().includes(term);
+      const inTitle = book.title?.toLowerCase().includes(term);
+      const inAuthor = book.author?.toLowerCase().includes(term);
       const inIsbn = book.isbn && book.isbn.toLowerCase().includes(term);
       const inCategory = book.category && book.category.toLowerCase().includes(term);
       return inTitle || inAuthor || inIsbn || inCategory;
     });
   }, [books, searchTerm]);
+
+  const fetchSingleBookAvailability = async (bookId) => {
+    if (!bookId || !/^[0-9a-fA-F]{24}$/.test(bookId)) {
+      console.error("Invalid bookId:", bookId);
+      return;
+    }
+    const res = await apiRequest(`/books/available/${bookId}`, { auth: true });
+    // handle res...
+  };
 
   return (
     <div className="books-page">
@@ -187,20 +213,26 @@ const AvailableBooks = () => {
       </div>
 
       <div className="books-grid">
+        {loading && <p>Loading books...</p>}
+        {error && <p className="error">{error}</p>}
+        {!loading && books.length === 0 && (
+          <div className="no-books">
+            <p>No books found.</p>
+            <button onClick={fetchAvailableBooks}>Retry</button>
+          </div>
+        )}
         {filteredBooks.map((book) => (
-          <div className="book-card" key={book.id}>
+          <div className="book-card" key={book._id || book.id}>
             <h3>{book.title}</h3>
             <p className="author">by {book.author}</p>
             <p className="isbn">ISBN: {book.isbn}</p>
             <p className="category">Category: {book.category}</p>
-
             <span
               className={`status ${
                 book.available ? "available" : "unavailable"
               }`}>
               {book.available ? "Available" : "Borrowed"}
             </span>
-
             {book.available ? (
               <button className="borrow-btn">Borrow Book</button>
             ) : (
