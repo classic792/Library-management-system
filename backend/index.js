@@ -1,5 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -13,8 +15,6 @@ import bookRoutes from "./routes/bookRoutes.js";
 import borrowRoutes from "./routes/borrowRoutes.js";
 import returnRoutes from "./routes/returnRoutes.js";
 import searchRoutes from "./routes/searchRoutes.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

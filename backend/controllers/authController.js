@@ -1,5 +1,5 @@
 import { registerUser, loginUser } from "../services/authService.js";
-import { googleLogin } from "../services/googleAuthService.js";
+import { googleLogin, googleSignup as googleSignupService } from "../services/googleAuthService.js";
 import { signupSchema, loginSchema } from "../utils/validators.js";
 
 const formatValidationErrors = (details) =>
@@ -54,6 +54,24 @@ export const login = async (req, res) => {
       // message: err.message || "Unable to login",
     });
     
+  }
+};
+
+export const googleSignup = async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: "Google token is required" });
+    }
+    const result = await googleSignupService(token);
+    return res.status(200).json({
+      message: "Google signup successful",
+      ...result,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || "Unable to complete Google signup",
+    });
   }
 };
 
