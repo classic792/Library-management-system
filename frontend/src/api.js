@@ -19,12 +19,14 @@ export async function apiRequest(
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
-    credentials: "include", // if you ever use cookies
+    credentials: "include",
   });
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.message || "Invalid credentials");
+    const err = new Error(data.message || "Request failed");
+    err.status = res.status; // <-- add status
+    throw err;
   }
   return data;
 }

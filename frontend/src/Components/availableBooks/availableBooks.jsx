@@ -38,17 +38,28 @@ const AvailableBooks = () => {
 
   // TODO: Replace this mock data with data loaded from the backend.
   const books = [
-    { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
+    {
+      id: 1,
+      title: "Atomic Habits",
+      author: "James Clear",
+      isbn: "9780735211292",
+      category: "Self-help",
+      available: true,
+    },
     {
       id: 2,
       title: "Clean Code",
       author: "Robert C. Martin",
+      isbn: "9780132350884",
+      category: "Programming",
       available: false,
     },
     {
       id: 3,
       title: "Rich Dad Poor Dad",
       author: "Robert Kiyosaki",
+      isbn: "9781612680194",
+      category: "Finance",
       available: true,
     },
   ];
@@ -60,7 +71,9 @@ const AvailableBooks = () => {
     return books.filter((book) => {
       const inTitle = book.title.toLowerCase().includes(term);
       const inAuthor = book.author.toLowerCase().includes(term);
-      return inTitle || inAuthor;
+      const inIsbn = book.isbn && book.isbn.toLowerCase().includes(term);
+      const inCategory = book.category && book.category.toLowerCase().includes(term);
+      return inTitle || inAuthor || inIsbn || inCategory;
     });
   }, [books, searchTerm]);
 
@@ -166,7 +179,7 @@ const AvailableBooks = () => {
           <FaSearch className="books-search-icon" />
           <input
             type="text"
-            placeholder="Search by title or author"
+            placeholder="Search by title, author, ISBN, or category"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -178,6 +191,8 @@ const AvailableBooks = () => {
           <div className="book-card" key={book.id}>
             <h3>{book.title}</h3>
             <p className="author">by {book.author}</p>
+            <p className="isbn">ISBN: {book.isbn}</p>
+            <p className="category">Category: {book.category}</p>
 
             <span
               className={`status ${

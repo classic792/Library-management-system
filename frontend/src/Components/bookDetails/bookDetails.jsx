@@ -164,24 +164,15 @@ const BookDetails = () => {
                 </p>
               </div>
 
-              <h3>Description</h3>
-              <p className="description">
-                {book.description || "No description available."}
-              </p>
-
-              <h3>Availability</h3>
-              <div className="availability-grid">
-                <p>
-                  <strong>Total Copies:</strong> {book.totalCopies}
-                </p>
-                <p>
-                  <strong>Available Copies:</strong> {book.availableCopies}
-                </p>
-                <p>
-                  <strong>Borrowed Copies:</strong>{" "}
-                  {book.totalCopies - book.availableCopies}
-                </p>
-              </div>
+              {/* Add fieldset for description */}
+              <fieldset className="description-fieldset">
+                <legend>Description</legend>
+                <div className="description">
+                  {book?.description
+                    ? book.description
+                    : "No description available."}
+                </div>
+              </fieldset>
             </div>
           </div>
 
