@@ -9,9 +9,12 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { apiRequest } from "../../api";
 
 const UserDashboard = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [userName, setUserName] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,29 +26,36 @@ const UserDashboard = () => {
     navigate("/");
   };
 
+  const [stats, setStats] = useState({
+    borrowed: 0,
+    reservedBooks: 0,
+    returnedBooks: 0,
+  });
+
+  const fetchUserDashboard = async () => {
+    try {
+      const response = await apiRequest("/user/dashboard", { auth: true });
+      const data = response.data;
+
+      setStats(data.stats || {});
+      setRecentActivity(data.recentActivity || []);
+      setUserName(data.alias || "User");
+    } catch (error) {
+      console.error("Error loading user dashboard:", error);
+    }
+  };
+
   useEffect(() => {
     document.body.classList.add("dashboard-active");
     document.body.style.background = "white";
+
+    fetchUserDashboard();
 
     return () => {
       document.body.classList.remove("dashboard-active");
       document.body.style.background = "";
     };
   }, []);
-
-  // Mock Stats
-  const stats = {
-    borrowedBooks: 0,
-    reservedBooks: 0,
-    returnedBooks: 0,
-  };
-
-  // Recent Activity
-  const recentActivity = [
-    { title: "The great Ezekiel", action: "Borrowed", date: "Jan 4, 2025" },
-    { title: "History about Osman", action: "Returned", date: "Dec 1, 2025" },
-    { title: "nana kwame", action: "Borrowed", date: "Jan 4, 2025" },
-  ];
 
   return (
     <div className="user-dashboard">
@@ -144,7 +154,7 @@ const UserDashboard = () => {
       {/* Main Content */}
       <main className="dashboard-main">
         <h1 className="dashboard-title">
-          Welcome Back, <s>USER</s>
+          Welcome Back, <strong>{userName}</strong>
         </h1>
         <p className="dashboard-subtitle">Here is your library activity</p>
 
@@ -152,7 +162,7 @@ const UserDashboard = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <h3>Borrowed Books</h3>
-            <p className="stat-value">{stats.borrowedBooks}</p>
+            <p className="stat-value">{stats.borrowed}</p>
           </div>
 
           <div className="stat-card">

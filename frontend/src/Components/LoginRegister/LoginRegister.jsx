@@ -65,7 +65,6 @@ const LoginRegister = () => {
       navigate("/user/dashboard"); // once you import useNavigate
     } catch (error) {
       setLoginMessage(error.message);
-      // setTimeout(() => setLoginMessage(""), 3000);
     }
   };
 
