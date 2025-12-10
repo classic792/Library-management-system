@@ -24,12 +24,14 @@ const AddBook = () => {
     isbn: "",
     year: "",
     totalCopies: "",
+    availableCopies: "",
     imageUrl: "",
     imageFile: null,
   });
   const [errors, setErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState("");
   const [uploadMethod, setUploadMethod] = useState("url"); // 'url' or 'file'
+  const [description, setDescription] = useState(""); // added field state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -179,6 +181,7 @@ const AddBook = () => {
         totalCopies: Number(formData.totalCopies),
         availableCopies: Number(formData.availableCopies),
         imageUrl: finalImageUrl || undefined,
+        description, // include description in payload
       };
 
       await apiRequest("/books", {
@@ -257,7 +260,7 @@ const AddBook = () => {
             <div className="logo-line logo-line-2"></div>
             <div className="logo-line logo-line-3"></div>
           </div>
-          <span className="logo-text">LibraSystem</span>
+          <span className="logo-text">GoldenIndex</span>
         </Link>
         <nav className="add-book-nav">
           <Link
@@ -546,6 +549,21 @@ const AddBook = () => {
                   </p>
                 </div>
               )}
+            </div>
+
+            {/* Description field (added) */}
+            <div className="input-box">
+              <label htmlFor="description" className="input-label">
+                Description*
+              </label>
+              <textarea
+                id="description"
+                className="input-textarea"
+                placeholder="Enter a short description of the book"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={6}
+              />
             </div>
 
             {submitStatus && (
