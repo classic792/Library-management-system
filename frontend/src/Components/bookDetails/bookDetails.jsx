@@ -33,19 +33,40 @@ const BookDetails = () => {
     navigate("/");
   };
 
+  // Remove background image when component mounts
   useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        setLoading(true);
-        const res = await apiRequest(`/books/${bookId}`, { auth: true });
+    document.body.classList.add("bookDetails-active");
 
-        setBook(res.data);
-      } catch (error) {
-        console.error("Error fetching book:", error);
-      } finally {
-        setLoading(false);
-      }
+    // Remove background image and set to white
+    document.body.style.background = "white";
+    document.body.style.backgroundImage = "none";
+    document.body.style.overflow = "auto";
+    document.body.style.display = "block";
+
+    return () => {
+      document.body.classList.remove("bookDetails-active");
+      document.body.style.background = "";
+      document.body.style.backgroundImage = "";
+      document.body.style.overflow = "";
+      document.body.style.display = "";
     };
+  }, []);
+
+  const fetchBook = async () => {
+    try {
+      setLoading(true);
+      const res = await apiRequest(`/books/${bookId}`, { auth: true });
+      // Backend structure =
+      // { message: "Book fetched successfully", data: bookObject }
+      setBook(res.data);
+    } catch (error) {
+      console.error("Error fetching book:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBook();
   }, [bookId]);
 
@@ -65,7 +86,7 @@ const BookDetails = () => {
             <div className="logo-line logo-line-2"></div>
             <div className="logo-line logo-line-3"></div>
           </div>
-          <span className="logo-text">LibraSystem</span>
+          <span className="logo-text">GoldenIndex</span>
         </Link>
         <nav className="dashboard-nav">
           <Link
@@ -104,108 +125,107 @@ const BookDetails = () => {
         </button>
       </header>
 
-      {/* <div className="details-header">
-        <Link to="/admin/books" className="back-btn">
-          ← Back to Books
-        </Link>
-        <h1>{book.title}</h1>
-      </div> */}
-
-      <div className="details-container">
-        {/* LEFT SIDE — BOOK COVER */}
-        <div className="details-image">
-          <img src={book.imageUrl} alt={book.title} />
+      <div className="content-wrapper">
+        <div className="details-header">
+          <Link to="/admin/books" className="back-btn">
+            ← Back to Books
+          </Link>
+          <h1>{book.title}</h1>
         </div>
+        <main className="details-main">
+          <div className="details-container">
+            {/* LEFT SIDE — BOOK COVER */}
+            <div className="details-image">
+              <img src={book.imageUrl} alt={book.title} />
+            </div>
 
-        {/* RIGHT SIDE — BOOK INFORMATION */}
-        <div className="details-info">
-          <h2>Book Information</h2>
+            {/* RIGHT SIDE — BOOK INFORMATION */}
+            <div className="details-info">
+              <h2>Book Information</h2>
+              <div className="info-grid">
+                <p>
+                  <strong>Author:</strong> {book.author}
+                </p>
+                <p>
+                  <strong>Category:</strong> {book.category}
+                </p>
+                <p>
+                  <strong>Year:</strong> {book.year}
+                </p>
+                <p>
+                  <strong>ISBN:</strong> {book.isbn}
+                </p>
+                <p>
+                  <strong>Condition:</strong> {book.condition}
+                </p>
+                <p>
+                  <strong>Date Uploaded:</strong>{" "}
+                  {new Date(book.createdAt).toLocaleDateString()}
+                </p>
+              </div>
 
-          <p>
-            <strong>Author:</strong> {book.author}
-          </p>
-          <p>
-            <strong>Category:</strong> {book.category}
-          </p>
-          <p>
-            <strong>Year:</strong> {book.year}
-          </p>
-          <p>
-            <strong>ISBN:</strong> {book.isbn}
-          </p>
+              {/* Add fieldset for description */}
+              <fieldset className="description-fieldset">
+                <legend>Description</legend>
+                <div className="description">
+                  {book?.description
+                    ? book.description
+                    : "No description available."}
+                </div>
+              </fieldset>
+            </div>
+          </div>
 
-          <p>
-            <strong>Description:</strong>{" "}
-            {book.description || "No description available."}
-          </p>
+          {/* BORROWING HISTORY */}
+          <div className="history-section">
+            <h2>Borrowing History</h2>
 
-          <p>
-            <strong>Condition:</strong> {book.condition}
-          </p>
+            {(!book.borrowingHistory || book.borrowingHistory.length === 0) && (
+              <p>No borrowing history for this book yet.</p>
+            )}
 
-          <p>
-            <strong>Date Uploaded:</strong>{" "}
-            {new Date(book.createdAt).toLocaleDateString()}
-          </p>
+            {book.borrowingHistory && book.borrowingHistory.length > 0 && (
+              <table className="history-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Borrowed At</th>
+                    <th>Due Date</th>
+                    <th>Returned At</th>
+                    <th>Status</th>
+                    <th>Return Condition</th>
+                  </tr>
+                </thead>
 
-          <h3>Availability</h3>
-          <p>
-            <strong>Total Copies:</strong> {book.totalCopies}
-          </p>
-          <p>
-            <strong>Available Copies:</strong> {book.availableCopies}
-          </p>
-          <p>
-            <strong>Borrowed Copies:</strong>{" "}
-            {book.totalCopies - book.availableCopies}
-          </p>
-        </div>
-      </div>
+                <tbody>
+                  {book.borrowingHistory.map((record, idx) => (
+                    <tr key={idx}>
+                      <td>
+                        {record.user?.alias || record.user?.email || "Unknown"}
+                      </td>
+                      <td>
+                        {new Date(record.borrowedAt).toLocaleDateString()}
+                      </td>
+                      <td>{new Date(record.dueAt).toLocaleDateString()}</td>
 
-      {/* BORROWING HISTORY */}
-      <div className="history-section">
-        <h2>Borrowing History</h2>
+                      <td>
+                        {record.returnedAt
+                          ? new Date(record.returnedAt).toLocaleDateString()
+                          : "Not Returned"}
+                      </td>
 
-        {(!book.borrowingHistory || book.borrowingHistory.length === 0) && (
-          <p>No borrowing history for this book yet.</p>
-        )}
+                      <td className={`status-${record.status}`}>
+                        {record.status}
+                      </td>
 
-        {book.borrowingHistory && book.borrowingHistory.length > 0 && (
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Borrowed At</th>
-                <th>Due Date</th>
-                <th>Returned At</th>
-                <th>Status</th>
-                <th>Return Condition</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {book.borrowingHistory.map((record, idx) => (
-                <tr key={idx}>
-                  <td>
-                    {record.user?.alias || record.user?.email || "Unknown"}
-                  </td>
-                  <td>{new Date(record.borrowedAt).toLocaleDateString()}</td>
-                  <td>{new Date(record.dueAt).toLocaleDateString()}</td>
-
-                  <td>
-                    {record.returnedAt
-                      ? new Date(record.returnedAt).toLocaleDateString()
-                      : "Not Returned"}
-                  </td>
-
-                  <td className={`status-${record.status}`}>{record.status}</td>
-
-                  <td>{record.returnCondition || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+                      <td>{record.returnCondition || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
