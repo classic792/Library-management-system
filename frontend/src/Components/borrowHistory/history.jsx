@@ -11,9 +11,12 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { apiRequest } from "../../api";
 
 const BorrowHistory = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -29,27 +32,25 @@ const BorrowHistory = () => {
     document.body.classList.add("dashboard-active");
     document.body.style.background = "white";
 
+    const fetchHistory = async () => {
+      try {
+        const response = await apiRequest(`/borrows/my-borrows/`, {
+          auth: true,
+        });
+
+        setHistory(response.data);
+      } catch (error) {
+        console.error("Error fetching borrow history:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHistory();
     return () => {
       document.body.classList.remove("dashboard-active");
       document.body.style.background = "";
     };
   }, []);
-
-  const history = [
-    {
-      id: 1,
-      book: "Atomic Habits",
-      dateBorrowed: "2025-01-02",
-      returned: true,
-    },
-    { id: 2, book: "Clean Code", dateBorrowed: "2025-01-10", returned: false },
-    {
-      id: 3,
-      book: "Rich Dad Poor Dad",
-      dateBorrowed: "2025-01-12",
-      returned: true,
-    },
-  ];
 
   return (
     <div className="history-container">
@@ -151,20 +152,33 @@ const BorrowHistory = () => {
               <th>Book</th>
               <th>Date Borrowed</th>
               <th>Status</th>
+              <th>Due Date</th>
+              <th>Returned Date</th>
             </tr>
           </thead>
+
           <tbody>
             {history.map((item) => (
-              <tr key={item.id}>
-                <td>{item.book}</td>
-                <td>{item.dateBorrowed}</td>
+              <tr key={item._id}>
+                <td>{item.book?.title || "Unknown Book"}</td>
+                <td>{new Date(item.borrowDate).toLocaleDateString()}</td>
                 <td>
                   <span
                     className={`status-badge ${
-                      item.returned ? "returned" : "not-returned"
+                      item.status === "returned" ? "returned" : "not-returned"
                     }`}>
-                    {item.returned ? "Returned" : "Not Returned"}
+                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                   </span>
+                </td>
+                <td>
+                  {item.dueDate
+                    ? new Date(item.dueDate).toLocaleDateString()
+                    : "—"}
+                </td>
+                <td>
+                  {item.returnedDate
+                    ? new Date(item.returnedDate).toLocaleDateString()
+                    : "Not returned"}
                 </td>
               </tr>
             ))}
@@ -174,21 +188,35 @@ const BorrowHistory = () => {
         {/* MOBILE CARD VIEW */}
         <div className="history-cards">
           {history.map((item) => (
-            <div className="history-card" key={item.id}>
+            <div className="history-card" key={item._id}>
               <p>
-                <strong>Book:</strong> {item.book}
+                <strong>Book:</strong> {item.book?.title || "Unknown Book"}
               </p>
               <p>
-                <strong>Date:</strong> {item.dateBorrowed}
+                <strong>Date:</strong>{" "}
+                {new Date(item.borrowDate).toLocaleDateString()}
               </p>
               <p>
                 <strong>Status:</strong>
                 <span
                   className={`status-badge ${
-                    item.returned ? "returned" : "not-returned"
+                    item.status === "returned" ? "returned" : "not-returned"
                   }`}>
-                  {item.returned ? "Returned" : "Not Returned"}
+                  {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                 </span>
+              </p>
+              <p>
+                <strong>Due Date:</strong>{" "}
+                {item.dueDate
+                  ? new Date(item.dueDate).toLocaleDateString()
+                  : "—"}
+              </p>
+
+              <p>
+                <strong>Returned Date:</strong>{" "}
+                {item.returnedDate
+                  ? new Date(item.returnedDate).toLocaleDateString()
+                  : "Not returned"}
               </p>
             </div>
           ))}

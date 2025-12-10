@@ -82,7 +82,6 @@ borrowingHistory: [
     },
   },
 ],
-
   bookSchema.pre("save", async function (next) {
     try {
       if (this.isNew) {

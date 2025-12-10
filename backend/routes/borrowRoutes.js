@@ -9,11 +9,12 @@ import {
 } from "../controllers/borrowController.js";
 import { authenticate } from "../middleware/authMiddleware.js";
 import authorizeRoles from "../middleware/roleMiddleware.js";
-import { validate, validateParams, validateQuery } from "../middleware/validationMiddleware.js";
 import {
-  borrowIdParamSchema,
-  bookIdParamSchema,
-} from "../utils/validators.js";
+  validate,
+  validateParams,
+  validateQuery,
+} from "../middleware/validationMiddleware.js";
+import { borrowIdParamSchema, bookIdParamSchema } from "../utils/validators.js";
 import Joi from "joi";
 
 const router = express.Router();
@@ -84,4 +85,3 @@ router.post(
 );
 
 export default router;
-

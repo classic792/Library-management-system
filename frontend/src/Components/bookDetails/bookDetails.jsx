@@ -33,21 +33,19 @@ const BookDetails = () => {
     navigate("/");
   };
 
-  const fetchBook = async () => {
-    try {
-      setLoading(true);
-      const res = await apiRequest(`/books/${bookId}`, { auth: true });
-      // Backend structure =
-      // { message: "Book fetched successfully", data: bookObject }
-      setBook(res.data);
-    } catch (error) {
-      console.error("Error fetching book:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        setLoading(true);
+        const res = await apiRequest(`/books/${bookId}`, { auth: true });
+
+        setBook(res.data);
+      } catch (error) {
+        console.error("Error fetching book:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchBook();
   }, [bookId]);
 

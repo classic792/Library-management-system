@@ -37,6 +37,7 @@ const AvailableBooks = () => {
   }, []);
 
   // TODO: Replace this mock data with data loaded from the backend.
+
   const books = [
     { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
     {
@@ -52,11 +53,10 @@ const AvailableBooks = () => {
       available: true,
     },
   ];
-
   const filteredBooks = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return books;
 
+    //  if (!term) return books;
     return books.filter((book) => {
       const inTitle = book.title.toLowerCase().includes(term);
       const inAuthor = book.author.toLowerCase().includes(term);

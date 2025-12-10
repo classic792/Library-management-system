@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./userDashboard.css";
+import "../AdminDashboard/AdminDashboard.css";
 import {
   FaBook,
   FaHistory,
@@ -8,6 +9,8 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaFileInvoice,
+  FaCheck,
 } from "react-icons/fa";
 import { apiRequest } from "../../api";
 
@@ -27,19 +30,17 @@ const UserDashboard = () => {
   };
 
   const [stats, setStats] = useState({
-    borrowed: 0,
+    borrowedBooks: 0,
     reservedBooks: 0,
     returnedBooks: 0,
   });
 
   const fetchUserDashboard = async () => {
     try {
-      const response = await apiRequest("/user/dashboard", { auth: true });
-      const data = response.data;
-
+      const data = await apiRequest("/user/dashboard", { auth: true });
       setStats(data.stats || {});
       setRecentActivity(data.recentActivity || []);
-      setUserName(data.alias || "User");
+      setUserName(data.name || "User");
     } catch (error) {
       console.error("Error loading user dashboard:", error);
     }
@@ -162,17 +163,26 @@ const UserDashboard = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <h3>Borrowed Books</h3>
-            <p className="stat-value">{stats.borrowed}</p>
+            <p className="stat-value">{stats.borrowedBooks}</p>
+            <div className="stat-icon-wrapper">
+              <FaFileInvoice className="stat-icon" />
+            </div>
           </div>
 
           <div className="stat-card">
             <h3>Reserved Books</h3>
             <p className="stat-value">{stats.reservedBooks}</p>
+            <div className="stat-icon-wrapper">
+              <FaBookmark className="stat-icon" />
+            </div>
           </div>
 
           <div className="stat-card">
             <h3>Returned Books</h3>
             <p className="stat-value">{stats.returnedBooks}</p>
+            <div className="stat-icon-wrapper">
+              <FaCheck className="stat-icon" />
+            </div>
           </div>
         </div>
 
