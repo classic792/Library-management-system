@@ -63,25 +63,25 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
-borrowingHistory: [
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+  borrowingHistory: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      borrowedAt: Date,
+      dueAt: Date,
+      returnedAt: Date,
+      returnCondition: {
+        type: String,
+        enum: ["Good", "Fair", "Damaged"],
+      },
+      status: {
+        type: String,
+        enum: ["borrowed", "returned", "overdue"],
+      },
     },
-    borrowedAt: Date,
-    dueAt: Date,
-    returnedAt: Date,
-    returnCondition: {
-      type: String,
-      enum: ["Good", "Fair", "Damaged"],
-    },
-    status: {
-      type: String,
-      enum: ["borrowed", "returned", "overdue"],
-    },
-  },
-],
+  ],
   bookSchema.pre("save", async function (next) {
     try {
       if (this.isNew) {

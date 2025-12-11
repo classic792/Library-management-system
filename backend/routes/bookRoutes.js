@@ -1,4 +1,5 @@
 import express from "express";
+import { getAvailableBooks } from "../controllers/availableBooks.js";
 import {
   createBookController,
   getBooksController,
@@ -43,6 +44,12 @@ router.get(
   validateParams(bookIdParamSchema),
   getBookController
 );
+router.get(
+  "/available",
+  authorizeRoles("admin", "librarian", "member"),
+  getAvailableBooks
+);
+
 router.patch(
   "/:bookId",
   authorizeRoles("admin", "librarian"),
