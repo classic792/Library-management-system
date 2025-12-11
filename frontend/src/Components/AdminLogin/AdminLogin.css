@@ -1,200 +1,200 @@
 .admin-wrapper {
-    position: relative;
-    width: 420px;
-    height: 450px;
-    background: transparent;
-    border: 2px solid *rgba(255, 255, 255, .1);
-    backdrop-filter: blur(30px);
-    box-shadow: 0 0 10px rgba(245, 168, 26, 0.2);
-    border-radius: 10px;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: height .2s ease;
-    margin: 40px auto 20px;
+  position: relative;
+  width: 420px;
+  height: 450px;
+  background: transparent;
+  border: 2px solid * rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 0 10px rgba(245, 168, 26, 0.2);
+  border-radius: 10px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: height 0.2s ease;
+  margin: 40px auto 20px;
 }
 
-.admin-wrapper.active{
-    height: 520px;
-    overflow: hidden;
+.admin-wrapper.active {
+  height: 520px;
+  overflow: hidden;
 }
 
 .admin-wrapper .form-box {
-    width: 100%;
-    padding: 40px;
+  width: 100%;
+  padding: 40px;
 }
 
 .admin-wrapper .form-box.login {
-    transition: translate .18s ease;
-    translate: 0;
+  transition: translate 0.18s ease;
+  translate: 0;
 }
 
 .admin-wrapper.active .form-box.login {
-    transition: none;
-    translate: -400px;
+  transition: none;
+  translate: -400px;
 }
 
 .admin-wrapper .form-box.register {
-    position: absolute;
-    transition: none;
-    translate: 400px;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(225, 225, 225, 225) transparent;
+  position: absolute;
+  transition: none;
+  translate: 400px;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(225, 225, 225, 225) transparent;
 }
 
 .admin-wrapper.active .form-box.register {
-    transition: translate .18s ease;
-    translate: 0;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(225, 225, 225, 225) transparent;
+  transition: translate 0.18s ease;
+  translate: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(225, 225, 225, 225) transparent;
 }
 
 /* Custom scrollbar for register form */
 .admin-wrapper .form-box.register::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .admin-wrapper .form-box.register::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
+  background: transparent;
+  border-radius: 10px;
 }
 
 .admin-wrapper .form-box.register::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 
 .admin-wrapper .form-box.register::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 form h1 {
-    font-size: 36px;
-    text-align: center;
+  font-size: 36px;
+  text-align: center;
 }
 
 form .input-box {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin: 30px 0;
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
 }
 
 .input-box input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    border: 2px solid rgba(0, 0, 0, 0.4);
-    border-radius: 40px;
-    font-size: 16px;
-    color: black;
-    padding: 20px 45px 20px 20px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 40px;
+  font-size: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
 }
 
 .input-box input::placeholder {
-    color: rgb(107, 105, 105);
+  color: rgb(107, 105, 105);
 }
 
 .input-box .icon {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    translate: 0 -50%;
-    font-size: 16px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  translate: 0 -50%;
+  font-size: 16px;
 }
 
 form .remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14.5px;
-    margin: -15px 0 15px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
 }
 
 .remember-forgot label input {
-    accent-color: whitesmoke;
-    margin-right: 4px;
+  accent-color: whitesmoke;
+  margin-right: 4px;
 }
 
 .remember-forgot a {
-    color: black;
-    text-decoration: none;
+  color: black;
+  text-decoration: none;
 }
 
 .remember-forgot a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 form button {
-    width: 100%;
-    height: 45px;
-    background: black;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-    font-weight: 700;
-    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  width: 100%;
+  height: 45px;
+  background: black;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  font-weight: 700;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 form button:active {
-    transform: scale(0.97);
-    box-shadow: 0 0 6px rgba(0, 0, 0, .2);
-    color: white;
+  transform: scale(0.97);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 form button:disabled {
-    background: rgba(255, 255, 255, .2);
-    color: black;
-    cursor: not-allowed;
-    border: 1px solid black;
+  background: rgba(255, 255, 255, 0.2);
+  color: black;
+  cursor: not-allowed;
+  border: 1px solid black;
 }
 
 form .register-link {
-    font-size: 14.5px;
-    text-align: center;
-    margin: 20px 0 15px;
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
 }
 
 .register-link p a {
-    color: black;
-    text-decoration: none;
-    font-weight: 600;
+  color: black;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .register-link p a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .error-msg {
-    margin-top: -18px;
-    margin-bottom: 18px;
-    font-size: 13px;
-    color: #ff9b9b;
-    text-align: left;
+  margin-top: -18px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #ff9b9b;
+  text-align: left;
 }
 
 .input-box input.input-error {
-    border-color: #ff9b9b;
+  border-color: #ff9b9b;
 }
 
 .feedback-msg {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #12c05b;
-    text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #12c05b;
+  text-align: center;
 }
 
 /* ...existing code... */
@@ -227,56 +227,56 @@ form .register-link {
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
-    .admin-wrapper {
-        width: 90vw;
-        max-width: 420px;
-        margin: 0 auto;
-    }
+  .admin-wrapper {
+    width: 90vw;
+    max-width: 420px;
+    margin: 0 auto;
+  }
 
-    .admin-wrapper .form-box {
-        padding: 32px;
-    }
+  .admin-wrapper .form-box {
+    padding: 32px;
+  }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding: 0 12px;
-    }
+  body {
+    padding: 0 12px;
+  }
 
-    .admin-wrapper {
-        width: 100%;
-        max-width: none;
-        height: auto;
-        border-width: 1px;
-        border-radius: 16px;
-        padding: 18px 10px 24px;
-    }
+  .admin-wrapper {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    border-width: 1px;
+    border-radius: 16px;
+    padding: 18px 10px 24px;
+  }
 
-    .admin-wrapper.active {
-        height: auto;
-    }
+  .admin-wrapper.active {
+    height: auto;
+  }
 
-    .admin-wrapper .form-box {
-        padding: 24px 12px;
-    }
+  .admin-wrapper .form-box {
+    padding: 24px 12px;
+  }
 
-    form h1 {
-        font-size: 28px;
-    }
+  form h1 {
+    font-size: 28px;
+  }
 
-    .input-box {
-        margin: 24px 0;
-    }
+  .input-box {
+    margin: 24px 0;
+  }
 
-    form .remember-forgot {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        font-size: 13.5px;
-    }
+  form .remember-forgot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13.5px;
+  }
 
-    form button {
-        height: 50px;
-        font-size: 17px;
-    }
+  form button {
+    height: 50px;
+    font-size: 17px;
+  }
 }
