@@ -38,23 +38,33 @@ const AvailableBooks = () => {
     };
   }, []);
 
-  // TODO: Replace this mock data with data loaded from the backend.
+  // API call to fetch available books
 
-  const books = [
-    { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
-    {
-      id: 2,
-      title: "Clean Code",
-      author: "Robert C. Martin",
-      available: false,
-    },
-    {
-      id: 3,
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      available: true,
-    },
-  ];
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+  const fetchBooks = async () => {
+    try {
+      const token = localStorage.getItem("userToken");
+
+      const res = await fetch("http://localhost:3000/api/books/available", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      setBooks(data.books || []);
+    } catch (err) {
+      console.error("Failed to load books:", err);
+    }
+  };
+
+  fetchBooks();
+}, []);
+
+
+
   const filteredBooks = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
 
@@ -183,12 +193,12 @@ const AvailableBooks = () => {
 
             <span
               className={`status ${
-                book.available ? "available" : "unavailable"
+                book.availableCopies > 0 ? "Available" : "Borrowed"
               }`}>
-              {book.available ? "Available" : "Borrowed"}
+              {book.availableCopies > 0 ? "Available" : "Borrowed"}
             </span>
 
-            {book.available ? (
+            {book.availableCopies > 0 ? (
               <button className="borrow-btn">Borrow Book</button>
             ) : (
               <button className="borrow-btn disabled" disabled>

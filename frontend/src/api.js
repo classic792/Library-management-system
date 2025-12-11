@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:3001/api";
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api";
 
 export const getAuthToken = () =>
   localStorage.getItem("userToken") || localStorage.getItem("adminToken");
@@ -27,3 +27,6 @@ export async function apiRequest(
   }
   return data;
 }
+
+console.log(localStorage.getItem("userToken"));
+
