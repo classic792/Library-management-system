@@ -1,12 +1,5 @@
 import mongoose from "mongoose";
 
-const counterSchema = new mongoose.Schema({
-  key: { type: String, required: true, unique: true },
-  value: { type: Number, default: 0 },
-});
-
-const Counter = mongoose.model("Counter", counterSchema);
-
 const bookSchema = new mongoose.Schema(
   {
     title: {
@@ -27,6 +20,7 @@ const bookSchema = new mongoose.Schema(
     description: {
       type: String,
       default: "",
+      trim: true,
     },
     condition: {
       type: String,
@@ -36,7 +30,9 @@ const bookSchema = new mongoose.Schema(
     isbn: {
       type: String,
       unique: true,
+      sparse: true,
       trim: true,
+      minlength: 13,
     },
     year: {
       type: Number,
@@ -57,49 +53,30 @@ const bookSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    borrowingHistory: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        borrowedAt: Date,
+        dueAt: Date,
+        returnedAt: Date,
+        returnCondition: {
+          type: String,
+          enum: ["Good", "Fair", "Damaged"],
+        },
+        status: {
+          type: String,
+          enum: ["borrowed", "returned", "overdue"],
+        },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
-
-borrowingHistory: [
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    borrowedAt: Date,
-    dueAt: Date,
-    returnedAt: Date,
-    returnCondition: {
-      type: String,
-      enum: ["Good", "Fair", "Damaged"],
-    },
-    status: {
-      type: String,
-      enum: ["borrowed", "returned", "overdue"],
-    },
-  },
-],
-  bookSchema.pre("save", async function (next) {
-    try {
-      if (this.isNew) {
-        const counter = await Counter.findOneAndUpdate(
-          { key: "bookId" },
-          { $inc: { value: 1 } },
-          { new: true, upsert: true }
-        );
-        const baseNumber = 9780000000000;
-        const isbnNumber = baseNumber + counter.value;
-        this.isbn = isbnNumber.toString();
-      }
-      next();
-    } catch (error) {
-      next(error);
-      console.log(error.message);
-    }
-  });
 
 bookSchema.pre("save", function normalizeCopies(next) {
   if (this.availableCopies == null) {

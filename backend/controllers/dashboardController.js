@@ -6,10 +6,10 @@ export const getAdminStatsController = async (req, res) => {
   try {
     const totalBooks = await Book.countDocuments();
     const totalCopies = await Book.aggregate([
-      { $group: { _id: null, copies: { $sum: "$copies" } } },
+      { $group: { _id: null, copies: { $sum: "$totalCopies" } } },
     ]);
 
-    const borrowedBooks = await Borrow.countDocuments({ status: "borrowed" });
+    const borrowedBooks = await Borrow.countDocuments({ status: "active" });
     const overdueBooks = await Borrow.countDocuments({ status: "overdue" });
 
     const totalMembers = await User.countDocuments({ role: "member" });

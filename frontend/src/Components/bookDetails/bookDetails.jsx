@@ -159,6 +159,12 @@ const BookDetails = () => {
                   <strong>Condition:</strong> {book.condition}
                 </p>
                 <p>
+                  <strong>Total Copies:</strong> {book.totalCopies}
+                </p>
+                <p>
+                  <strong>Available Copies:</strong> {book.availableCopies}
+                </p>
+                <p>
                   <strong>Date Uploaded:</strong>{" "}
                   {new Date(book.createdAt).toLocaleDateString()}
                 </p>

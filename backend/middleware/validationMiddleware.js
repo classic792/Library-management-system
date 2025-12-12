@@ -1,5 +1,4 @@
-import Joi from "joi";
-
+// import Joi from "joi";
 export const validate = (schema) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.body, {
@@ -32,6 +31,7 @@ export const validateParams = (schema) => {
     });
 
     if (error) {
+      console.log("Validation error in params:", error.details[0].message);
       const errors = error.details.map((detail) => ({
         field: detail.path.join("."),
         message: detail.message,
@@ -56,6 +56,7 @@ export const validateQuery = (schema) => {
     });
 
     if (error) {
+      console.log("Validation error in query:", error.details[0].message);
       const errors = error.details.map((detail) => ({
         field: detail.path.join("."),
         message: detail.message,
@@ -71,4 +72,3 @@ export const validateQuery = (schema) => {
     next();
   };
 };
-

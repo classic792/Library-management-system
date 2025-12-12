@@ -10,7 +10,11 @@ const throwHttpError = (message, statusCode = 400) => {
 
 const DEFAULT_BORROW_DAYS = 14;
 
-export const createBorrow = async (userId, bookId, dueDateDays = DEFAULT_BORROW_DAYS) => {
+export const createBorrow = async (
+  userId,
+  bookId,
+  dueDateDays = DEFAULT_BORROW_DAYS
+) => {
   // Check if book exists
   const book = await Book.findById(bookId);
   if (!book) {
@@ -44,8 +48,8 @@ export const createBorrow = async (userId, bookId, dueDateDays = DEFAULT_BORROW_
     dueDate,
   });
 
-  // Update book available copies
-  await borrowBook(bookId);
+  // Update book available copies and history
+  await borrowBook(bookId, userId, dueDate);
 
   // Populate and return
   await borrow.populate("user", "name email alias");

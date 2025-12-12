@@ -1,6 +1,7 @@
 import "./availableBooks.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
+import { apiRequest } from "../../api";
 import "../userDashboard/userDashboard.css";
 import {
   FaBook,
@@ -15,6 +16,21 @@ import {
 const AvailableBooks = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "", // success, error, info
+    visible: false,
+  });
+  const [modal, setModal] = useState({
+    isOpen: false,
+    bookId: null,
+    bookTitle: "",
+  });
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -26,11 +42,50 @@ const AvailableBooks = () => {
     navigate("/");
   };
 
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type, visible: true });
+    setTimeout(() => {
+      setNotification((prev) => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
+  const initiateBorrow = (book) => {
+    setModal({
+      isOpen: true,
+      bookId: book._id,
+      bookTitle: book.title,
+    });
+  };
+
+  const confirmBorrow = async () => {
+    if (!modal.bookId) return;
+
+    try {
+      await apiRequest(`/books/${modal.bookId}/borrow`, {
+        method: "POST",
+        auth: true,
+        body: { dueDateDays: 14 }, // Default 14 days
+      });
+      showNotification("Book borrowed successfully!", "success");
+      setModal({ isOpen: false, bookId: null, bookTitle: "" });
+      // Refresh list to update availability
+      fetchBooks();
+    } catch (err) {
+      console.error("Error borrowing book:", err);
+      showNotification(err.message || "Failed to borrow book", "error");
+      setModal({ isOpen: false, bookId: null, bookTitle: "" });
+    }
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, bookId: null, bookTitle: "" });
+  };
+
   useEffect(() => {
     document.body.classList.add("dashboard-active");
     document.body.style.background = "white";
 
-    
+    fetchBooks();
 
     return () => {
       document.body.classList.remove("dashboard-active");
@@ -38,36 +93,64 @@ const AvailableBooks = () => {
     };
   }, []);
 
-  // TODO: Replace this mock data with data loaded from the backend.
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const res = await apiRequest("/books", { auth: true });
+      // Backend returns { message: "...", data: [...] }
+      setBooks(res.data || []);
+      setError("");
+    } catch (err) {
+      console.error("Error fetching books:", err);
+      setError("Failed to load available books.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const books = [
-    { id: 1, title: "Atomic Habits", author: "James Clear", available: true },
-    {
-      id: 2,
-      title: "Clean Code",
-      author: "Robert C. Martin",
-      available: false,
-    },
-    {
-      id: 3,
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      available: true,
-    },
-  ];
+  const handleReserve = (bookId) => {
+    showNotification("Reserve feature coming soon!", "info");
+  };
+
   const filteredBooks = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-
-    //  if (!term) return books;
     return books.filter((book) => {
-      const inTitle = book.title.toLowerCase().includes(term);
-      const inAuthor = book.author.toLowerCase().includes(term);
+      const inTitle = book.title?.toLowerCase().includes(term);
+      const inAuthor = book.author?.toLowerCase().includes(term);
       return inTitle || inAuthor;
     });
   }, [books, searchTerm]);
 
   return (
     <div className="books-page">
+      {/* Notification Toast */}
+      {notification.visible && (
+        <div className={`notification-toast ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
+      {/* Custom Confirmation Modal */}
+      {modal.isOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Confirm Borrow</h3>
+            <p>
+              Are you sure you want to borrow <strong>{modal.bookTitle}</strong>
+              ?
+            </p>
+            <div className="modal-actions">
+              <button className="modal-btn cancel" onClick={closeModal}>
+                Cancel
+              </button>
+              <button className="modal-btn confirm" onClick={confirmBorrow}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="dashboard-header">
         <Link to="/user/dashboard" className="logo-container">
@@ -162,7 +245,7 @@ const AvailableBooks = () => {
 
       <h2 className="title">Available Books</h2>
 
-      {/* Search bar (title / author / ISBN / category during integration) */}
+      {/* Search bar */}
       <div className="books-search-bar">
         <div className="books-search-input-wrapper">
           <FaSearch className="books-search-icon" />
@@ -175,29 +258,74 @@ const AvailableBooks = () => {
         </div>
       </div>
 
-      <div className="books-grid">
-        {filteredBooks.map((book) => (
-          <div className="book-card" key={book.id}>
-            <h3>{book.title}</h3>
-            <p className="author">by {book.author}</p>
+      {loading && <p style={{ textAlign: "center" }}>Loading books...</p>}
+      {error && <p style={{ textAlign: "center", color: "red" }}>{error}</p>}
 
-            <span
-              className={`status ${
-                book.available ? "available" : "unavailable"
-              }`}>
-              {book.available ? "Available" : "Borrowed"}
-            </span>
+      {!loading && !error && (
+        <div className="books-grid">
+          {filteredBooks.map((book) => {
+            const isAvailable = book.availableCopies > 0;
+            return (
+              <div className="book-card" key={book._id}>
+                {book.imageUrl && (
+                  <img
+                    src={book.imageUrl}
+                    alt={book.title}
+                    className="book-cover-small"
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "cover",
+                      borderRadius: "4px",
+                      marginBottom: "10px",
+                    }}
+                  />
+                )}
+                <h3>{book.title}</h3>
+                <p className="author">by {book.author}</p>
 
-            {book.available ? (
-              <button className="borrow-btn">Borrow Book</button>
-            ) : (
-              <button className="borrow-btn disabled" disabled>
-                Not Available
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+                <span
+                  className={`status ${
+                    isAvailable ? "available" : "unavailable"
+                  }`}>
+                  {isAvailable
+                    ? `Available (${book.availableCopies})`
+                    : "Borrowed"}
+                </span>
+
+                <div className="book-actions">
+                  {isAvailable ? (
+                    <button
+                      className="borrow-btn"
+                      onClick={() => initiateBorrow(book)}>
+                      Borrow
+                    </button>
+                  ) : (
+                    <button className="borrow-btn disabled" disabled>
+                      Out of Stock
+                    </button>
+                  )}
+
+                  {/* <button
+                    className="reserve-btn"
+                    onClick={() => handleReserve(book._id)}
+                    style={{
+                      marginLeft: "10px",
+                      padding: "8px 16px",
+                      backgroundColor: "#f0ad4e",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}>
+                    Reserve
+                  </button> */}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

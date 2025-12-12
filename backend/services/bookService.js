@@ -21,10 +21,37 @@ const trimStringFields = (payload) => {
 export const createBook = async (payload) => {
   const normalizedPayload = trimStringFields(payload);
 
-  const existing = await Book.findOne({ isbn: normalizedPayload.isbn });
-  if (existing) {
-    throwHttpError("A book with this ISBN already exists", 409);
+  const { isbn, title, author } = normalizedPayload;
+
+  let existing = null;
+
+  // If ISBN is provided → check by ISBN first
+  if (isbn && isbn.trim() !== "") {
+    existing = await Book.findOne({ isbn });
   }
+
+  // If no ISBN match → fallback to title + author
+  if (!existing) {
+    existing = await Book.findOne({
+      title: { $regex: `^${title}$`, $options: "i" },
+      author: { $regex: `^${author}$`, $options: "i" },
+    });
+  }
+  // If book exists → merge copies
+  if (existing) {
+    const copiesToAdd = normalizedPayload.totalCopies || 1;
+
+    existing.incrementCopies(copiesToAdd);
+    await existing.save();
+
+    return {
+      ...existing.toObject(),
+      merged: true,
+      message: "Existing book updated with additional copies",
+    };
+  }
+
+  // Otherwise create a new book
   const book = await Book.create(normalizedPayload);
   return book;
 };
@@ -34,7 +61,10 @@ export const getAllBooks = async () => {
 };
 
 export const getBookById = async (bookId) => {
-  const book = await Book.findById(bookId);
+  const book = await Book.findById(bookId).populate(
+    "borrowingHistory.user",
+    "firstName lastName email alias"
+  );
   if (!book) {
     throwHttpError("Book not found", 404);
   }
@@ -62,7 +92,7 @@ export const deleteBookById = async (bookId) => {
   return book;
 };
 
-export const borrowBook = async (bookId) => {
+export const borrowBook = async (bookId, userId, dueDate) => {
   const book = await Book.findById(bookId);
   if (!book) {
     throwHttpError("Book not found", 404);
@@ -73,6 +103,15 @@ export const borrowBook = async (bookId) => {
   }
 
   book.borrowCopy();
+
+  // Add to borrowing history
+  book.borrowingHistory.push({
+    user: userId,
+    borrowedAt: new Date(),
+    dueAt: dueDate,
+    status: "borrowed",
+  });
+
   await book.save();
   return book;
 };

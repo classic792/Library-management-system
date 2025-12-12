@@ -17,6 +17,21 @@ const respondWithError = (res, error, fallbackMessage) => {
 
 export const createBookController = async (req, res) => {
   try {
+    console.log("CreateBookController Debug:");
+    console.log("req.body.description:", req.body.description);
+    console.log(
+      "req.validatedData.description:",
+      req.validatedData.description
+    );
+
+    // Fallback if Joi strips the description for some reason
+    if (!req.validatedData.description && req.body.description) {
+      console.log("Applying description fallback from req.body");
+      req.validatedData.description = req.body.description;
+    }
+
+    console.log("Final payload passed to createBook:", req.validatedData);
+
     const book = await createBook(req.validatedData);
     return res.status(201).json({
       message: "Book created successfully",

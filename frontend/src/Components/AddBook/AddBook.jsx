@@ -27,11 +27,11 @@ const AddBook = () => {
     availableCopies: "",
     imageUrl: "",
     imageFile: null,
+    description: "",
   });
   const [errors, setErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState("");
   const [uploadMethod, setUploadMethod] = useState("url"); // 'url' or 'file'
-  const [description, setDescription] = useState(""); // added field state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -138,6 +138,9 @@ const AddBook = () => {
         newErrors.imageUrl = "Please select an image file";
       }
     }
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -177,11 +180,12 @@ const AddBook = () => {
         title: formData.title,
         author: formData.author,
         category: formData.category,
+        isbn: formData.isbn.trim() !== "" ? formData.isbn : undefined,
         year: Number(formData.year),
         totalCopies: Number(formData.totalCopies),
         availableCopies: Number(formData.availableCopies),
         imageUrl: finalImageUrl || undefined,
-        description, // include description in payload
+        description: formData.description.trim(),
       };
 
       await apiRequest("/books", {
@@ -203,6 +207,7 @@ const AddBook = () => {
         availableCopies: "",
         imageUrl: "",
         imageFile: null,
+        description: "",
       });
       setErrors({});
 
@@ -260,7 +265,7 @@ const AddBook = () => {
             <div className="logo-line logo-line-2"></div>
             <div className="logo-line logo-line-3"></div>
           </div>
-          <span className="logo-text">GoldenIndex</span>
+          <span className="logo-text">LibraSystem</span>
         </Link>
         <nav className="add-book-nav">
           <Link
@@ -459,6 +464,25 @@ const AddBook = () => {
               </div>
             </div>
 
+            <div>
+              <div className="form-group">
+                <label htmlFor="isbn">ISBN</label>
+                <input
+                  type="string"
+                  id="isbn"
+                  name="isbn"
+                  value={formData.isbn}
+                  onChange={handleChange}
+                  className={errors.isbn ? "error" : ""}
+                  placeholder="Enter ISBN number"
+                  min="13"
+                />
+                {errors.isbn && (
+                  <span className="error-message">{errors.isbn}</span>
+                )}
+              </div>
+            </div>
+
             {/* Image Upload Section */}
             <div className="form-group full-width">
               <label>Book Cover Image *</label>
@@ -557,13 +581,18 @@ const AddBook = () => {
                 Description*
               </label>
               <textarea
+                type="text"
+                name="description"
                 id="description"
                 className="input-textarea"
                 placeholder="Enter a short description of the book"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={formData.description}
+                onChange={handleChange}
                 rows={6}
               />
+              {errors.description && (
+                <span className="error-message">{errors.description}</span>
+              )}
             </div>
 
             {submitStatus && (
@@ -594,6 +623,7 @@ const AddBook = () => {
                     availableCopies: "",
                     imageUrl: "",
                     imageFile: null,
+                    description: "",
                   });
                   setErrors({});
                   setSubmitStatus("");

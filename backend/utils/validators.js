@@ -22,22 +22,28 @@ export const bookCreateSchema = Joi.object({
   title: Joi.string().trim().required(),
   author: Joi.string().trim().required(),
   category: Joi.string().trim().required(),
-  isbn: Joi.string().trim(),
+  isbn: Joi.string().min(13).trim().optional().allow(""),
   year: Joi.number().integer().min(0).required(),
   totalCopies: Joi.number().integer().min(0).required(),
-  availableCopies: Joi.number().integer().min(0),
-  imageUrl: Joi.string().trim().uri().allow(""),
+  availableCopies: Joi.number().integer().min(0).optional(),
+  imageUrl: Joi.string().trim().uri().allow("").optional(),
+  description: Joi.string().trim().required(),
+  condition: Joi.string()
+    .valid("New", "Good", "Fair", "Worn", "Damaged")
+    .default("Good"),
 });
 
 export const bookUpdateSchema = Joi.object({
   title: Joi.string().trim(),
   author: Joi.string().trim(),
   category: Joi.string().trim(),
-  isbn: Joi.string().trim(),
+  isbn: Joi.string().min(13).trim(),
   year: Joi.number().integer().min(0),
   totalCopies: Joi.number().integer().min(0),
   availableCopies: Joi.number().integer().min(0),
   imageUrl: Joi.string().trim().uri().allow(""),
+  description: Joi.string().trim(),
+  condition: Joi.string().valid("New", "Good", "Fair", "Worn", "Damaged"),
 }).min(1);
 
 export const borrowCreateSchema = Joi.object({
