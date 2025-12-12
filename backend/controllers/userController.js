@@ -47,6 +47,7 @@ export const getUserDashboard = async (req, res) => {
         record.status.charAt(0).toUpperCase() +
         record.status.slice(1).toLowerCase(),
       date: record.createdAt.toDateString(),
+      copyId: record.copyId,
     }));
 
     res.json({

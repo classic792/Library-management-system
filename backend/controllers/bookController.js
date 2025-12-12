@@ -113,8 +113,13 @@ export const borrowBookController = async (req, res) => {
 
 export const returnBookController = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { condition, fine } = req.validatedData || {};
+    const { condition, fine, userId: bodyUserId } = req.validatedData || {};
+    let userId = req.user.id;
+
+    // Allow admin/librarian to specify userId
+    if (bodyUserId && ["admin", "librarian"].includes(req.user.role)) {
+      userId = bodyUserId;
+    }
     const returnRecord = await createReturn(
       userId,
       req.validatedParams.bookId,

@@ -70,11 +70,91 @@ const BookDetails = () => {
     fetchBook();
   }, [bookId]);
 
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "", // success, error, info
+    visible: false,
+  });
+  const [modal, setModal] = useState({
+    isOpen: false,
+    userId: null,
+    userName: "",
+  });
+
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type, visible: true });
+    setTimeout(() => {
+      setNotification((prev) => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
+  const initiateReturn = (user) => {
+    const userId = user?._id || user;
+    const userName = user?.alias || user?.email || "User";
+    setModal({
+      isOpen: true,
+      userId,
+      userName,
+    });
+  };
+
+  const confirmReturn = async () => {
+    if (!modal.userId) return;
+
+    try {
+      await apiRequest(`/books/${bookId}/return`, {
+        method: "POST",
+        auth: true,
+        body: { userId: modal.userId },
+      });
+      // Refresh book details
+      fetchBook();
+      showNotification("Book returned successfully", "success");
+      setModal({ isOpen: false, userId: null, userName: "" });
+    } catch (error) {
+      console.error("Error returning book:", error);
+      showNotification(error.message || "Failed to return book", "error");
+      setModal({ isOpen: false, userId: null, userName: "" });
+    }
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, userId: null, userName: "" });
+  };
+
   if (loading) return <p className="loading">Loading book details...</p>;
   if (!book) return <p className="error">Book not found.</p>;
 
   return (
     <div className="book-details-page">
+      {/* Notification Toast */}
+      {notification.visible && (
+        <div className={`notification-toast ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {modal.isOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Confirm Return</h3>
+            <p>
+              Are you sure you want to return the copy borrowed by{" "}
+              <strong>{modal.userName}</strong>?
+            </p>
+            <div className="modal-actions">
+              <button className="modal-btn cancel" onClick={closeModal}>
+                Cancel
+              </button>
+              <button className="modal-btn confirm" onClick={confirmReturn}>
+                Confirm Return
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="dashboard-header">
         <Link
@@ -194,18 +274,21 @@ const BookDetails = () => {
               <table className="history-table">
                 <thead>
                   <tr>
+                    <th>Copy ID</th>
                     <th>User</th>
                     <th>Borrowed At</th>
                     <th>Due Date</th>
                     <th>Returned At</th>
                     <th>Status</th>
                     <th>Return Condition</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {book.borrowingHistory.map((record, idx) => (
                     <tr key={idx}>
+                      <td>{record.copyId || "-"}</td>
                       <td>
                         {record.user?.alias || record.user?.email || "Unknown"}
                       </td>
@@ -225,6 +308,27 @@ const BookDetails = () => {
                       </td>
 
                       <td>{record.returnCondition || "-"}</td>
+
+                      <td>
+                        {record.status === "borrowed" ||
+                        record.status === "overdue" ? (
+                          <button
+                            className="return-btn"
+                            onClick={() => initiateReturn(record.user)}
+                            style={{
+                              padding: "5px 10px",
+                              borderRadius: "4px",
+                              border: "none",
+                              backgroundColor: "#d9534f",
+                              color: "white",
+                              cursor: "pointer",
+                            }}>
+                            Return
+                          </button>
+                        ) : (
+                          <span style={{ color: "#999" }}>-</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

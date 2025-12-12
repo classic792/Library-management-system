@@ -193,15 +193,15 @@
 }
 
 .status-borrowed {
-  background-color: #ffa726; /* Amber */
+  background-color: #ffa726;
 }
 
 .status-returned {
-  background-color: #66bb6a; /* Green */
+  background-color: #66bb6a;
 }
 
 .status-overdue {
-  background-color: #ef5350; /* Red */
+  background-color: #ef5350;
 }
 
 /* Loading and Error States */

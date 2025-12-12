@@ -41,15 +41,17 @@ export const createBorrow = async (
   const dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + dueDateDays);
 
+  // Update book available copies and history
+  // We must do this first to get the copyId, as it is required for the Borrow record
+  const { copyId } = await borrowBook(bookId, userId, dueDate);
+
   // Create borrow record
   const borrow = await Borrow.create({
     user: userId,
     book: bookId,
     dueDate,
+    copyId,
   });
-
-  // Update book available copies and history
-  await borrowBook(bookId, userId, dueDate);
 
   // Populate and return
   await borrow.populate("user", "name email alias");

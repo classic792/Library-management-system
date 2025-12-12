@@ -53,6 +53,7 @@ export const borrowCreateSchema = Joi.object({
 export const returnCreateSchema = Joi.object({
   condition: Joi.string().valid("good", "damaged", "lost").default("good"),
   fine: Joi.number().min(0).default(0),
+  userId: Joi.string().hex().length(24).optional(),
 });
 
 export const bookIdParamSchema = Joi.object({

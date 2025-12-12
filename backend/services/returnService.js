@@ -9,7 +9,12 @@ const throwHttpError = (message, statusCode = 400) => {
   throw error;
 };
 
-export const createReturn = async (userId, bookId, condition = "good", fine = 0) => {
+export const createReturn = async (
+  userId,
+  bookId,
+  condition = "good",
+  fine = 0
+) => {
   // Find active borrow for this user and book
   const borrow = await Borrow.findOne({
     user: userId,
@@ -52,7 +57,7 @@ export const createReturn = async (userId, bookId, condition = "good", fine = 0)
   await borrow.save();
 
   // Update book available copies
-  await returnBook(bookId);
+  await returnBook(bookId, borrow.copyId);
 
   // Populate and return
   await returnRecord.populate("user", "name email alias");
@@ -111,4 +116,3 @@ export const getReturnById = async (returnId) => {
 
   return returnRecord;
 };
-

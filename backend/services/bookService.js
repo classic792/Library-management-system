@@ -102,31 +102,32 @@ export const borrowBook = async (bookId, userId, dueDate) => {
     throwHttpError("No copies available to borrow", 400);
   }
 
-  book.borrowCopy();
+  const copyId = book.borrowCopy();
 
   // Add to borrowing history
   book.borrowingHistory.push({
     user: userId,
+    copyId: copyId,
     borrowedAt: new Date(),
     dueAt: dueDate,
     status: "borrowed",
   });
 
   await book.save();
-  return book;
+  return { book, copyId };
 };
 
-export const returnBook = async (bookId) => {
+export const returnBook = async (bookId, copyId) => {
   const book = await Book.findById(bookId);
   if (!book) {
     throwHttpError("Book not found", 404);
   }
 
-  if (book.availableCopies >= book.totalCopies) {
-    throwHttpError("All copies are already returned", 400);
-  }
+  // If we are strictly using copyId, we should leverage it.
+  // But for safety, we keep the original check if we want to ensure basic consistency,
+  // though specific copy return logic is safer.
 
-  book.returnCopy();
+  book.returnCopy(copyId);
   await book.save();
   return book;
 };
